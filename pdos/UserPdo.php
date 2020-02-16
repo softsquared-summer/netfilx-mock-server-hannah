@@ -1,10 +1,10 @@
 <?php
-function signUp($id, $pw, $email, $school, $studentNum)
+function signUp($name, $pw, $id)
 {
     $pdo = pdoSqlConnect();
-    $query = "INSERT INTO User (id, pw, email, school, studentNum) VALUES (?,?,?,?,?);";
+    $query = "INSERT INTO User (name, pw, id) VALUES (?,?,?);";
     $st = $pdo->prepare($query);
-    $st->execute([$id, $pw, $email, $school, $studentNum]);
+    $st->execute([$name, $pw, $id]);
     $st = null;
     $pdo = null;
 }
@@ -12,7 +12,6 @@ function signUp($id, $pw, $email, $school, $studentNum)
 function validUser($id){
 
     $pdo = pdoSqlConnect();
-
     $query = "SELECT EXISTS(SELECT * FROM User WHERE id = ?) AS exist;";
     $st = $pdo->prepare($query);
     $st->execute([$id]);
@@ -24,7 +23,7 @@ function validUser($id){
 function validPw($id, $pw){
     $pdo = pdoSqlConnect();
 
-    $query = "SELECT EXISTS(SELECT * FROM User WHERE id=? and pw = ?) AS exist;";
+    $query = "SELECT EXISTS(SELECT * FROM User WHERE id = ? and pw = ?) AS exist;";
     $st = $pdo->prepare($query);
     $st->execute([$id, $pw]);
     $res = $st->fetchAll();
@@ -46,9 +45,9 @@ function login($id, $pw){
     return intval($res[0]["exist"]);
 }
 
-function userInfo($id){
+function UserInfo($id){
     $pdo = pdoSqlConnect();
-    $query = "select no, id, email, pw, school, studentNum from User where id = ?";
+    $query = "select id, name from User where id = ?";
 
     $st = $pdo->prepare($query);
     $st->execute([$id]);
@@ -59,12 +58,13 @@ function userInfo($id){
     return $res[0];
 }
 
-function userDetail($userNo){
+
+function UserDetail($UserNo){
     $pdo = pdoSqlConnect();
     $query = "select * from User where no = ?";
 
     $st = $pdo->prepare($query);
-    $st->execute([$userNo]);
+    $st->execute([$UserNo]);
     $st->setFetchMode(PDO::FETCH_ASSOC);
     $res = $st->fetchAll();
     $st = null;
@@ -72,20 +72,20 @@ function userDetail($userNo){
     return $res[0];
 }
 
-function validUserNo($userNo){
+function validUserNo($UserNo){
     $pdo = pdoSqlConnect();
 
     $query = "SELECT EXISTS(SELECT * FROM User WHERE no = ?) AS exist;";
     $st = $pdo->prepare($query);
-    $st->execute([$userNo]);
+    $st->execute([$UserNo]);
     $res = $st->fetchAll();
 
     return intval($res[0]["exist"]);
 }
 
-function userAll(){
+function UserAll(){
     $pdo = pdoSqlConnect();
-    $query = "select no, id, email, pw, school, studentNum from User";
+    $query = "select id, pw, name from User";
     $st = $pdo->prepare($query);
     $st->execute();
     $st->setFetchMode(PDO::FETCH_ASSOC);

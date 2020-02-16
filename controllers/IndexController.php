@@ -27,28 +27,44 @@ try {
          * API Name : 테스트 API
          * 마지막 수정 날짜 : 19.04.29
          */
+        case "genreList" :
+            http_response_code(200);
+            $res->result = genreList();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "장르 목록";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+            
+        case "movieGenre" :
+            http_response_code(200);
+            $res->result = movieGenre();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "장르 별 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
 
-//        case "myArticle":
-//        {
-//            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
-//            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
-//                $res->isSuccess = FALSE;
-//                $res->code = 201;
-//                $res->message = "유효하지 않은 토큰입니다";
-//                echo json_encode($res, JSON_NUMERIC_CHECK);
-//                addErrorLogs($errorLogs, $res, $req);
-//                return;
-//            }
-//                $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
-//                $id = $data->id;
-//                http_response_code(200);
-//                $res->result = myArticle($id);
-//                $res->isSuccess = TRUE;
-//                $res->code = 100;
-//                $res->message = "내가 쓴 글 조회";
-//                echo json_encode($res, JSON_NUMERIC_CHECK);
-//                break;
-//        }
+        case "movieList" :
+
+            $lastNo = $_GET["lastNo"];
+            $list = $_GET["genre"];
+            if(empty($list)){
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "공백이 입력됐습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }
+            else {
+                http_response_code(200);
+                $res->result = movieList($list);
+                $res->isSuccess = TRUE;
+                $res->code = 100;
+                $res->message = "장르 별 영화 조회";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                break;
+            }
 
         case "myComment" :
         {

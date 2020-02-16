@@ -4,8 +4,9 @@ require './pdos/DatabasePdo.php';
 require './vendor/autoload.php';
 
 require './pdos/UserPdo.php';//로그인, 가입 등
-require './pdos/BoardPdo.php';//게시판 관리
+//require './pdos/BoardPdo.php';//게시판 관리
 require './pdos/ReviewPdo.php';
+require './pdos/MoviePdo.php';
 
 use \Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler;
@@ -19,6 +20,10 @@ ini_set('default_charset', 'utf8mb4');
 //Main Server API
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     /* ******************   Test   ****************** */
+    $r->addRoute('GET', '/movie/latest', ['IndexController', 'movieGenre']);
+    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
+    $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
+
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.
     $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);

@@ -65,19 +65,15 @@ try {
 
         case "signUp":
         {
-            $id = $req->id;
             $pw = $req->pw;
-            $email = $req->email;
-            $school = $req->school;
-            $studentNum = $req->studentNum;
+            $id = $req->id;
+            $name = $req->name;
 
-            $check_email = filter_var($email, FILTER_VALIDATE_EMAIL);
+            $check_email = filter_var($id, FILTER_VALIDATE_EMAIL);
             $check_pw = '/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!*@#$%^&+=]).*$/';
             $check_id = '/^[0-9a-z]{4,9}$/';
-            $check_school = '/^[가-힣a-zA-Z]{3,15}$/';
-            $check_studentNum = '/^[0-9]{2}$/';
 
-            if (empty($id) || empty($pw) || empty($email) || empty($school) || empty($studentNum)) {
+            if (empty($name) || empty($pw) || empty($id)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "공백이 입력됐습니다.";
@@ -87,13 +83,7 @@ try {
                 if (validUser($id) == 1) {
                     $res->isSucces = FALSE;
                     $res->code = 100;
-                    $res->message = "이미 존재하는 id 입니다.";
-                    echo json_encode($res, JSON_NUMERIC_CHECK);
-                    return;
-                } else if (!preg_match($check_id, $id)) {
-                    $res->isSucces = FALSE;
-                    $res->code = 100;
-                    $res->message = "id는 4-9자리의 숫자, 영문만 입력 가능";
+                    $res->message = "이미 가입된 email 입니다.";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
                 } else if (!preg_match($check_pw, "$pw")) {
@@ -108,20 +98,8 @@ try {
                     $res->message = "이메일 형식에 부합하지 않습니다.";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
-                } else if (!preg_match($check_school, "$school")) {
-                    $res->isSucces = FALSE;
-                    $res->code = 100;
-                    $res->message = "올바른 학교명을 입력하세요";
-                    echo json_encode($res, JSON_NUMERIC_CHECK);
-                    return;
-                } else if (!preg_match($check_studentNum, "$studentNum")) {
-                    $res->isSucces = FALSE;
-                    $res->code = 100;
-                    $res->message = "입학년도를 숫자 두자리로 입력해주세요.";
-                    echo json_encode($res, JSON_NUMERIC_CHECK);
-                    return;
                 } else {
-                    $res->result = signUp($id, $pw, $email, $school, $studentNum);
+                    $res->result = signUp($name, $pw, $id);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
                     $res->message = "회원 가입 성공!";
@@ -157,7 +135,7 @@ try {
                 } else if(!validPw($id, $pw)){
                 $res->isSuccess = FALSE;
                 $res->code = 100;
-                $res->message = "유효하지 않은 비밀번호... 입니다.";
+                $res->message = "유효하지 않은 비밀번호 입니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
                 }
