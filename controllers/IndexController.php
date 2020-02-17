@@ -49,22 +49,22 @@ try {
 
             $lastNo = $_GET["lastNo"];
             $list = $_GET["genre"];
-            if(empty($list)){
-                $res->isSucces = FALSE;
-                $res->code = 00;
-                $res->message = "공백이 입력됐습니다.";
-                echo json_encode($res, JSON_NUMERIC_CHECK);
-                return;
-            }
-            else {
+//            if(empty($list)){
+//                $res->isSucces = FALSE;
+//                $res->code = 00;
+//                $res->message = "공백이 입력됐습니다.";
+//                echo json_encode($res, JSON_NUMERIC_CHECK);
+//                return;
+//            }
+//            else {
                 http_response_code(200);
-                $res->result = movieList($list);
+                $res->result = movieList();
                 $res->isSuccess = TRUE;
                 $res->code = 100;
                 $res->message = "장르 별 영화 조회";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
-            }
+
 
         case "myComment" :
         {

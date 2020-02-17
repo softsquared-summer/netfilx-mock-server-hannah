@@ -43,6 +43,20 @@ function genreList(){
     return $res;
 }
 
+function movieList(){
+    $pdo = pdoSqlConnect();
+    $query = "select no, title, posterUrl from Contents limit 0, 10;";
+    $st = $pdo->prepare($query);
+    $st->execute();
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+
+    $st = null;
+    $pdo = null;
+
+    return $res;
+}
+
 function exceptGenre($listNo, $lastNo){
     $pdo = pdoSqlConnect();
     $query = "select no, title, posterUrl
