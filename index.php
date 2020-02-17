@@ -23,6 +23,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/movie/latest', ['IndexController', 'movieGenre']);
     $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
     $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
+    $r->addRoute('GET', '/genre/list', ['IndexController', 'movieListGenre']);
+    $r->addRoute('GET', '/show', ['IndexController', 'show']);
+
+    $r->addRoute('GET', '/movie/popular', ['IndexController', 'popular']);
+    $r->addRoute('GET', '/movie/kids', ['IndexController', 'kids']);
+    $r->addRoute('GET', '/movie/new', ['IndexController', 'newAdd']);
+//    $r->addRoute('GET', '/movie/', ['IndexController', 'show']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.

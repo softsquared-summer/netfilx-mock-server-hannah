@@ -65,6 +65,81 @@ try {
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
 
+         case "movieListGenre" :
+         {
+             $genre = $_GET["genre"];
+             http_response_code(200);
+             $res->result = movieListGenre($genre);
+             $res->isSuccess = TRUE;
+             $res->code = 100;
+             $res->message = "장르 별 영화 조회";
+             echo json_encode($res, JSON_NUMERIC_CHECK);
+             break;
+         }
+
+        case "show" : {
+            http_response_code(200);
+            $res->result = show();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "장르 별 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "newAdd" : {
+            http_response_code(200);
+            $res->result = newAdd();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "새로 추가된 영화";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "kids" : {
+            http_response_code(200);
+            $res->result = kids();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "어린이 영화 만 8-10세";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "popular" : {
+            http_response_code(200);
+            $res->result = popular();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "인기 있는 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "searchGenre" : {
+
+            http_response_code(200);
+            $res->result = searchGenre();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "인기 있는 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "movieDetails":
+
+            {
+            http_response_code(200);
+            $res->result = movieDetails();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "인기 있는 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
 
         case "myComment" :
         {
