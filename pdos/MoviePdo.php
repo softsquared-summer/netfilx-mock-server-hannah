@@ -1,5 +1,43 @@
 <?php
 
+
+//function movieDetail($movieId){
+//    $pdo = pdoSqlConnect();
+//    $query = "select id, Contents.title, director, cast, `release`, posterPath, rating, duration, overview, videoUrl from Contents
+//left join (select MovieData.title, posterUrl as posterPath
+//    from MovieData group by MovieData.title) TB
+//on Contents.title = TB.title
+//where posterPath is not null and id = ?;";
+//    $st = $pdo->prepare($query);
+//    $st->execute($movieId);
+//    $st->setFetchMode(PDO::FETCH_ASSOC);
+//    $res = $st->fetchAll();
+//
+//    $st = null;
+//    $pdo = null;
+//
+//    return $res;
+//}
+
+function movieDetail($movieNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no, Contents.title, director, cast, `release`, posterPath, rating, duration, overview, videoUrl from Contents
+left join (select MovieData.title, posterUrl as posterPath
+    from MovieData group by MovieData.title) TB
+on Contents.title = TB.title
+where posterPath is not null and no = ?;
+";
+
+    $st = $pdo->prepare($query);
+    $st->execute([$movieNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res[0];
+}
+
+
 function movieGenre(){
     $pdo = pdoSqlConnect();
     $query = "select no, posterUrl from Movie limit 0, 15;";

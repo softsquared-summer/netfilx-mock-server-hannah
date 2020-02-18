@@ -27,6 +27,16 @@ try {
          * API Name : 테스트 API
          * 마지막 수정 날짜 : 19.04.29
          */
+        case "movieDetail" :
+//            $movieNo = $req->vars["movieNo"];
+            http_response_code(200);
+            $res->result = movieDetail($vars["movieNo"]);
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "사용자 번호별 정보 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
         case "genreList" :
             http_response_code(200);
             $res->result = genreList();

@@ -26,9 +26,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/genre/list', ['IndexController', 'movieListGenre']);
     $r->addRoute('GET', '/show', ['IndexController', 'show']);
 
-    $r->addRoute('GET', '/movie/popular', ['IndexController', 'popular']);
-    $r->addRoute('GET', '/movie/kids', ['IndexController', 'kids']);
-    $r->addRoute('GET', '/movie/new', ['IndexController', 'newAdd']);
+    $r->addRoute('GET', '/movie/{movieNo}', ['IndexController', 'movieDetail']);
+
+    $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'popular']);
+    $r->addRoute('GET', '/movie/list/kids', ['IndexController', 'kids']);
+    $r->addRoute('GET', '/movie/list/new', ['IndexController', 'newAdd']);
 //    $r->addRoute('GET', '/movie/', ['IndexController', 'show']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
