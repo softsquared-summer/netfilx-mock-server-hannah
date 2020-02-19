@@ -27,13 +27,33 @@ try {
          * API Name : 테스트 API
          * 마지막 수정 날짜 : 19.04.29
          */
+        case "selectMovieGenre":
+            $genreNo = $vars["genreNo"];
+            http_response_code(200);
+            $res->result = selectMovieGenre($genreNo);
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "장르 별 영화 리스트 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
+        case "genreTest" :
+            $genre = $vars["genre"];
+//            $genre = $_GET["genre"];
+            http_response_code(200);
+            $res->result = genreTest($genre);
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "사용자 번호별 정보 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
         case "movieDetail" :
-//            $movieNo = $req->vars["movieNo"];
             http_response_code(200);
             $res->result = movieDetail($vars["movieNo"]);
             $res->isSuccess = TRUE;
             $res->code = 100;
-            $res->message = "사용자 번호별 정보 조회";
+            $res->message = "영화 정보 상세 조회 페이지";
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -87,9 +107,31 @@ try {
              break;
          }
 
-        case "show" : {
+        case "movieDefaultPopular" : {
             http_response_code(200);
-            $res->result = show();
+            $res->result = movieDefaultPopular();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "인기 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "movieNewAdd" : {
+            http_response_code(200);
+            $res->result = movieNewAdd();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "새로 추가된 영화";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "selectSecondGenre": {
+            $genre1 = $vars["genreNo1"];
+            $genre2 = $vars["genreNo2"];
+            http_response_code(200);
+            $res->result = secondGenre($genre1, $genre2);
             $res->isSuccess = TRUE;
             $res->code = 100;
             $res->message = "장르 별 영화 조회";
@@ -97,12 +139,24 @@ try {
             break;
         }
 
-        case "newAdd" : {
+        case "genrePopular" : {
+            $genreNo = $vars["genreNo"];
             http_response_code(200);
-            $res->result = newAdd();
+            $res->result = genrePopular($genreNo);
             $res->isSuccess = TRUE;
             $res->code = 100;
-            $res->message = "새로 추가된 영화";
+            $res->message = "장르 별 영화 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+        }
+
+        case "genreNewAdd" : {
+            $genreNo = $vars["genreNo"];
+            http_response_code(200);
+            $res->result = genreNewAdd($genreNo);
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "장르 별 영화 조회";
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
         }
@@ -113,16 +167,6 @@ try {
             $res->isSuccess = TRUE;
             $res->code = 100;
             $res->message = "어린이 영화 만 8-10세";
-            echo json_encode($res, JSON_NUMERIC_CHECK);
-            break;
-        }
-
-        case "popular" : {
-            http_response_code(200);
-            $res->result = popular();
-            $res->isSuccess = TRUE;
-            $res->code = 100;
-            $res->message = "인기 있는 영화 조회";
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
         }

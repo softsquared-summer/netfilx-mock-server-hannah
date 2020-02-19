@@ -21,16 +21,23 @@ ini_set('default_charset', 'utf8mb4');
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     /* ******************   Test   ****************** */
     $r->addRoute('GET', '/movie/latest', ['IndexController', 'movieGenre']);
-    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
+//    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
     $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
     $r->addRoute('GET', '/genre/list', ['IndexController', 'movieListGenre']);
     $r->addRoute('GET', '/show', ['IndexController', 'show']);
+    $r->addRoute('GET', '/genretest/{genre}', ['IndexController', 'genreTest']);
 
     $r->addRoute('GET', '/movie/{movieNo}', ['IndexController', 'movieDetail']);
+    $r->addRoute('GET', '/movie/{genreNo}/list', ['IndexController', 'selectMovieGenre']); //장르별 영화 리스트
 
-    $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'popular']);
-    $r->addRoute('GET', '/movie/list/kids', ['IndexController', 'kids']);
-    $r->addRoute('GET', '/movie/list/new', ['IndexController', 'newAdd']);
+//    $r->addRoute('GET', '/movie/{geㅇnreNo}/lㅇist', ['IndexController', 'selectMovieGenre']);
+
+    $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'movieDefaultPopular']);
+//    $r->addRoute('GET', '/movie/list/kids', ['IndexController', 'kids']);
+    $r->addRoute('GET', '/movie/list/newAdd', ['IndexController', 'movieNewAdd']);
+    $r->addRoute('GET', '/movie/{genreNo1}/list/{genreNo2}', ['IndexController', 'selectSecondGenre']);
+    $r->addRoute('GET', '/movie/{genreNo}/popular', ['IndexController', 'genrePopular']);
+    $r->addRoute('GET', '/movie/{genreNo}/newAdd', ['IndexController', 'genreNewAdd']);
 //    $r->addRoute('GET', '/movie/', ['IndexController', 'show']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
