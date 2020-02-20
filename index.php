@@ -7,6 +7,7 @@ require './pdos/UserPdo.php';//로그인, 가입 등
 //require './pdos/BoardPdo.php';//게시판 관리
 require './pdos/ReviewPdo.php';
 require './pdos/MoviePdo.php';
+require './pdos/ScrapPdo.php';
 
 use \Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler;
@@ -23,24 +24,26 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/movie/latest', ['IndexController', 'movieGenre']);
 //    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
     $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
-    $r->addRoute('GET', '/genre/list', ['IndexController', 'movieListGenre']);
-    $r->addRoute('GET', '/show', ['IndexController', 'show']);
-    $r->addRoute('GET', '/genretest/{genre}', ['IndexController', 'genreTest']);
 
     $r->addRoute('GET', '/movie/{movieNo}', ['IndexController', 'movieDetail']);
+
     $r->addRoute('GET', '/movie/{genreNo}/list', ['IndexController', 'selectMovieGenre']); //장르별 영화 리스트
-
-//    $r->addRoute('GET', '/movie/{geㅇnreNo}/lㅇist', ['IndexController', 'selectMovieGenre']);
-
     $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'movieDefaultPopular']);
-//    $r->addRoute('GET', '/movie/list/kids', ['IndexController', 'kids']);
     $r->addRoute('GET', '/movie/list/newAdd', ['IndexController', 'movieNewAdd']);
+
     $r->addRoute('GET', '/movie/{genreNo1}/list/{genreNo2}', ['IndexController', 'selectSecondGenre']);
     $r->addRoute('GET', '/movie/{genreNo}/popular', ['IndexController', 'genrePopular']);
     $r->addRoute('GET', '/movie/{genreNo}/newAdd', ['IndexController', 'genreNewAdd']);
-//    $r->addRoute('GET', '/movie/', ['IndexController', 'show']);
+
+    $r->addRoute('POST', '/contents/scrap', ['ScrapController', 'contentsScrap']);
+    $r->addRoute('GET', '/user/scrap', ['ScrapController', 'myScrap']);
+
+    $r->addRoute('POST', '/contents/likes', ['ScrapController', 'contentsLike']);
+    $r->addRoute('POST', '/contents/dislikes', ['ScrapController', 'contentsDislikes']);
+
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
+    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
     $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.
     $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);
 //    $r->addRoute('GET', '/user', ['MainController', 'userDetail']);
@@ -49,7 +52,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 //
     $r->addRoute('GET', '/user/article', ['MainController', 'myArticle']);
     $r->addRoute('GET', '/user/comment', ['IndexController', 'myComment']);
-    $r->addRoute('GET', '/user/scrap', ['IndexController', 'myScrap']);
 
     $r->addRoute('POST', '/article/thumbs-up', ['IndexController', 'articleThumbsUp']);
     $r->addRoute('POST', '/article/scrap', ['IndexController', 'articleScrap']);
@@ -176,11 +178,11 @@ switch ($routeInfo[0]) {
                 $vars = $routeInfo[2];
                 require './controllers/ReviewController.php';
                 break;
-            /*case 'ProductController':
+            case 'ScrapController':
                 $handler = $routeInfo[1][1]; $vars = $routeInfo[2];
-                require './controllers/ProductController.php';
+                require './controllers/ScrapController.php';
                 break;
-            case 'SearchController':
+            /*case 'SearchController':
                 $handler = $routeInfo[1][1]; $vars = $routeInfo[2];
                 require './controllers/SearchController.php';
                 break;

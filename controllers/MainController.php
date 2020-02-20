@@ -67,20 +67,28 @@ try {
         {
             $pw = $req->pw;
             $id = $req->id;
-            $name = $req->name;
+            $type = $req->typeNo;
 
             $check_email = filter_var($id, FILTER_VALIDATE_EMAIL);
             $check_pw = '/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!*@#$%^&+=]).*$/';
             $check_id = '/^[0-9a-z]{4,9}$/';
+            $check_type = '/^[1-3]{1}$/';
 
-            if (empty($name) || empty($pw) || empty($id)) {
+            if (empty($type) || empty($pw) || empty($id)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "공백이 입력됐습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
-                if (validUser($id) == 1) {
+                if(!preg_match($check_type, "$type")){
+                    $res->isSucces = FALSE;
+                    $res->code = 100;
+                    $res->message = "구독 타입 1(basic), 2(standard), 3(premium) 중 숫자로 선택해주세요";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }
+                 else if (validUser($id) == 1) {
                     $res->isSucces = FALSE;
                     $res->code = 100;
                     $res->message = "이미 가입된 email 입니다.";
@@ -99,7 +107,7 @@ try {
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
                 } else {
-                    $res->result = signUp($name, $pw, $id);
+                    $res->result = signUp($type, $id, $pw);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
                     $res->message = "회원 가입 성공!";
@@ -233,17 +241,6 @@ try {
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
         }
-
-        case "searchReview": //미구현
-            $name = $_GET["name"];
-            $professor = $_GET["professor"];
-            http_response_code(200);
-            $res->result = searchReview($name, $professor);
-            $res->isSuccess = TRUE;
-            $res->code = 100;
-            $res->message = "리뷰 검색";
-            echo json_encode($res, JSON_NUMERIC_CHECK);
-            break;
 
         case "listUp":
 
