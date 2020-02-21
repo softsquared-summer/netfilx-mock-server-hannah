@@ -41,6 +41,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/contents/likes', ['ScrapController', 'contentsLike']);
     $r->addRoute('POST', '/contents/dislikes', ['ScrapController', 'contentsDislikes']);
 
+    $r->addRoute('GET', '/movie/{movieNo}/similar', ['IndexController', 'similarContents']);
+
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);

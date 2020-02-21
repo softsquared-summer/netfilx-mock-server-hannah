@@ -225,6 +225,36 @@ try {
             }
         }
 
+        case "similarContents":
+        {
+            $contentsNo = $vars["movieNo"];
+            if(!is_numeric($contentsNo)){ //이건 왜 체크가 안되지..
+                http_response_code(200);
+                $res->isSuccess = FALSE;
+                $res->code = 400;
+                $res->message = "숫자를 입력해주세요.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else {
+                if (!validNo($contentsNo)) {
+                    http_response_code(200);
+                    $res->isSuccess = FALSE;
+                    $res->code = 400;
+                    $res->message = "존재하지 않는 컨텐츠 번호 입니다. 정확히 입력해주세요.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }
+                http_response_code(200);
+                $res->result = similarContents($contentsNo, $contentsNo, $contentsNo);
+                $res->isSuccess = TRUE;
+                $res->code = 100;
+                $res->message = "영화 정보 상세 조회 페이지";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                break;
+            }
+
+        }
+
 
         case "myComment" :
         {

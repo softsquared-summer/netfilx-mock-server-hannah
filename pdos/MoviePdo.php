@@ -278,3 +278,34 @@ function validGenreNo($genreNo){
 
     return intval($res[0]["exist"]);
 }
+
+function similarContents($contentsNo, $contentsNo, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select Contents.no, title, posterUrl,`release`, genre1,genre2,genre3 from Contents
+inner join (select contentsNo, genre1, genre2, genre3
+    from GenreList group by contentsNo)genreTB
+on Contents.no = genreTB.contentsNo
+where `release` = (select `release` from Contents
+inner join (select contentsNo, genre1, genre2, genre3
+    from GenreList group by contentsNo)genreTB
+on Contents.no = genreTB.contentsNo
+where Contents.no = ?)
+or (select genreTB.genre1 from Contents
+inner join (select contentsNo, genre1, genre2, genre3
+    from GenreList group by contentsNo)genreTB
+on Contents.no = genreTB.contentsNo
+where Contents.no = ?) in (genre1, genre2, genre3)
+and (select genreTB.genre2 from Contents
+inner join (select contentsNo, genre1, genre2, genre3
+    from GenreList group by contentsNo)genreTB
+on Contents.no = genreTB.contentsNo
+where Contents.no = ?) in (genre1, genre2, genre3)
+order by Contents. no desc limit 0, 6;";
+    $st = $pdo->prepare($query);
+    $st->execute([$contentsNo, $contentsNo, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
