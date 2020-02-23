@@ -216,7 +216,7 @@ function movieListGenre($genre){
 
 function secondGenre($genre1, $genre2, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, type, title, `release` from Contents
+    $query = "select no, type, title, posterUrl from Contents
 inner join (select contentsNo, genre1, genre2, genre3
     from GenreList group by contentsNo) TB
 on Contents.no = TB.contentsNo
@@ -279,9 +279,9 @@ function validGenreNo($genreNo){
     return intval($res[0]["exist"]);
 }
 
-function similarContents($contentsNo, $contentsNo, $contentsNo){
+function similarContents($contentsNo1, $contentsNo2, $contentsNo3){
     $pdo = pdoSqlConnect();
-    $query = "select Contents.no, title, posterUrl,`release`, genre1,genre2,genre3 from Contents
+    $query = "select Contents.no, title, posterUrl from Contents
 inner join (select contentsNo, genre1, genre2, genre3
     from GenreList group by contentsNo)genreTB
 on Contents.no = genreTB.contentsNo
@@ -302,10 +302,36 @@ on Contents.no = genreTB.contentsNo
 where Contents.no = ?) in (genre1, genre2, genre3)
 order by Contents. no desc limit 0, 6;";
     $st = $pdo->prepare($query);
-    $st->execute([$contentsNo, $contentsNo, $contentsNo]);
+    $st->execute([$contentsNo1, $contentsNo2, $contentsNo3]);
     $st->setFetchMode(PDO::FETCH_ASSOC);
     $res = $st->fetchAll();
     $st = null;
     $pdo = null;
+    return $res;
+}
+
+function movieMain(){
+    $pdo = pdoSqlConnect();
+    $query = "(SELECT Contents.no, posterUrl, title, Gerne1.description as G1, Genre2.description as G2, Genre3.description as G3
+ FROM Contents INNER JOIN GenreList
+      ON Contents.no = GenreList.contentsNo
+           INNER JOIN Genre as Gerne1
+      ON GenreList.genre1 = Gerne1.no
+ inner join Genre as Genre2
+ on GenreList.genre2 = Genre2.no
+ left join Genre as Genre3
+ on GenreList.genre3 = Genre3.no
+where type = 'Movie'
+ ORDER BY Contents.no desc
+limit 10)
+    ORDER BY rand() limit 1;";
+    $st = $pdo->prepare($query);
+    $st->execute();
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+
+    $st = null;
+    $pdo = null;
+
     return $res;
 }

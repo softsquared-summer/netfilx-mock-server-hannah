@@ -25,7 +25,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 //    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
     $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
 
-    $r->addRoute('GET', '/movie/{movieNo}', ['IndexController', 'movieDetail']);
+    $r->addRoute('GET', '/contents/{contentsNo}', ['IndexController', 'movieDetail']);
 
     $r->addRoute('GET', '/movie/{genreNo}/list', ['IndexController', 'selectMovieGenre']); //장르별 영화 리스트
     $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'movieDefaultPopular']);
@@ -40,50 +40,52 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute('POST', '/contents/likes', ['ScrapController', 'contentsLike']);
     $r->addRoute('POST', '/contents/dislikes', ['ScrapController', 'contentsDislikes']);
+    $r->addRoute('POST', '/contents/watching', ['ScrapController', 'watchingVideo']);
 
-    $r->addRoute('GET', '/movie/{movieNo}/similar', ['IndexController', 'similarContents']);
+    $r->addRoute('GET', '/contents/{contentsNo}/similar', ['IndexController', 'similarContents']);
+    $r->addRoute('GET', '/movie/main', ['IndexController', 'movieMain']);
 
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
-    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
-    $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.
-    $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);
-//    $r->addRoute('GET', '/user', ['MainController', 'userDetail']);
-    $r->addRoute('POST', '/user', ['MainController', 'signUp']);
-    $r->addRoute('POST', '/user/token', ['MainController', 'login']);
+//    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
+//    $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.
+//    $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);
+////    $r->addRoute('GET', '/user', ['MainController', 'userDetail']);
+//    $r->addRoute('POST', '/user', ['MainController', 'signUp']);
+//    $r->addRoute('POST', '/user/token', ['MainController', 'login']);
+////
+//    $r->addRoute('GET', '/user/article', ['MainController', 'myArticle']);
+//    $r->addRoute('GET', '/user/comment', ['IndexController', 'myComment']);
 //
-    $r->addRoute('GET', '/user/article', ['MainController', 'myArticle']);
-    $r->addRoute('GET', '/user/comment', ['IndexController', 'myComment']);
-
-    $r->addRoute('POST', '/article/thumbs-up', ['IndexController', 'articleThumbsUp']);
-    $r->addRoute('POST', '/article/scrap', ['IndexController', 'articleScrap']);
+//    $r->addRoute('POST', '/article/thumbs-up', ['IndexController', 'articleThumbsUp']);
+//    $r->addRoute('POST', '/article/scrap', ['IndexController', 'articleScrap']);
+////
+//    $r->addRoute('GET', '/hot-article', ['IndexController', 'hotArticle']);
+//    $r->addRoute('GET', '/free-board', ['IndexController', 'lookupFreeBoard']);
+//    $r->addRoute('GET', '/board?type=free', ['IndexController', 'lookupFreeBoard']);
+//    $r->addRoute('GET', '/secret-board', ['IndexController', 'lookupSecretBoard']);
 //
-    $r->addRoute('GET', '/hot-article', ['IndexController', 'hotArticle']);
-    $r->addRoute('GET', '/free-board', ['IndexController', 'lookupFreeBoard']);
-    $r->addRoute('GET', '/board?type=free', ['IndexController', 'lookupFreeBoard']);
-    $r->addRoute('GET', '/secret-board', ['IndexController', 'lookupSecretBoard']);
-
-    $r->addRoute('GET', '/article/all', ['IndexController', 'showArticleComment']);
-    $r->addRoute('GET', '/comment', ['IndexController', 'showComment']);
-    $r->addRoute('GET', '/article', ['IndexController', 'showArticle']);
-
-    $r->addRoute('GET', '/free-board/limit', ['IndexController', 'freeListAll']);
-    $r->addRoute('GET', '/free-board/scroll', ['IndexController', 'infiniteScroll']);
-    $r->addRoute('GET', '/secret-board/limit', ['IndexController', 'secretListAll']);
-    $r->addRoute('GET', '/secret-board/scroll', ['IndexController', 'infiniteScrollSecret']);
-
-    $r->addRoute('POST', '/free-board', ['IndexController', 'writeFreeBoard']);
-    $r->addRoute('POST', '/secret-board', ['IndexController', 'writeSecretBoard']);
-
-    $r->addRoute('POST', '/article/comment', ['IndexController', 'writeComment']);
-    $r->addRoute('POST', '/article/re-comment', ['IndexController', 'writeReComment']);
-
-    $r->addRoute('GET', '/lecture/review/search', ['MainController', 'searchReview']);
-    $r->addRoute('GET', '/lecture', ['MainController', 'lectureDetail']);
-    $r->addRoute('GET', '/lecture/review', ['MainController', 'reviewList']);
-    $r->addRoute('GET', '/lecture/review/scroll', ['MainController', 'reviewScroll']);
-
-    $r->addRoute('GET', '/list-up', ['MainController', 'listUp']);
+//    $r->addRoute('GET', '/article/all', ['IndexController', 'showArticleComment']);
+//    $r->addRoute('GET', '/comment', ['IndexController', 'showComment']);
+//    $r->addRoute('GET', '/article', ['IndexController', 'showArticle']);
+//
+//    $r->addRoute('GET', '/free-board/limit', ['IndexController', 'freeListAll']);
+//    $r->addRoute('GET', '/free-board/scroll', ['IndexController', 'infiniteScroll']);
+//    $r->addRoute('GET', '/secret-board/limit', ['IndexController', 'secretListAll']);
+//    $r->addRoute('GET', '/secret-board/scroll', ['IndexController', 'infiniteScrollSecret']);
+//
+//    $r->addRoute('POST', '/free-board', ['IndexController', 'writeFreeBoard']);
+//    $r->addRoute('POST', '/secret-board', ['IndexController', 'writeSecretBoard']);
+//
+//    $r->addRoute('POST', '/article/comment', ['IndexController', 'writeComment']);
+//    $r->addRoute('POST', '/article/re-comment', ['IndexController', 'writeReComment']);
+//
+//    $r->addRoute('GET', '/lecture/review/search', ['MainController', 'searchReview']);
+//    $r->addRoute('GET', '/lecture', ['MainController', 'lectureDetail']);
+//    $r->addRoute('GET', '/lecture/review', ['MainController', 'reviewList']);
+//    $r->addRoute('GET', '/lecture/review/scroll', ['MainController', 'reviewScroll']);
+//
+//    $r->addRoute('GET', '/list-up', ['MainController', 'listUp']);
 
 //    $r->addRoute('POST', '/article/re-comment/{parent}', ['IndexController', 'writeReComment']);
 //    $r->addRoute('PATCH', '/article/thumbsUp/{articleNo}', ['IndexController', 'articleThumbsUp']);

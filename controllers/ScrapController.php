@@ -35,7 +35,7 @@ try {
                 $res->message = "공백이 입력되었습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(!is_numeric($contentsNo)){
+            } else if (!is_numeric($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "번호를 숫자로 입력해주세요.";
@@ -44,7 +44,7 @@ try {
             } else if (validNo($contentsNo) == 0) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "존재하지 않는 게시글 번호입니다.";
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
@@ -55,7 +55,7 @@ try {
                     $res->message = "스크랩 목록 삭제";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
-                }else {
+                } else {
                     $res->result = Scrap($id, $contentsNo);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
@@ -109,7 +109,7 @@ try {
                 $res->message = "공백이 입력되었습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(!is_numeric($contentsNo)){
+            } else if (!is_numeric($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "번호를 숫자로 입력해주세요.";
@@ -118,11 +118,11 @@ try {
             } else if (validNo($contentsNo) == 0) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "존재하지 않는 게시글 번호입니다.";
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
-                if(existsDislikes($id, $contentsNo)){
+                if (existsDislikes($id, $contentsNo)) {
                     $res->isSucces = FALSE;
                     $res->code = 00;
                     $res->message = "존재하는 싫어요를 삭제 해주세요";
@@ -169,7 +169,7 @@ try {
                 $res->message = "공백이 입력되었습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(!is_numeric($contentsNo)){
+            } else if (!is_numeric($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "번호를 숫자로 입력해주세요.";
@@ -178,11 +178,11 @@ try {
             } else if (validNo($contentsNo) == 0) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "존재하지 않는 게시글 번호입니다.";
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
-                if(existsLikes($id, $contentsNo)){
+                if (existsLikes($id, $contentsNo)) {
                     $res->isSucces = FALSE;
                     $res->code = 00;
                     $res->message = "존재하는 좋아요를 삭제 해주세요";
@@ -207,7 +207,56 @@ try {
                 }
             }
         }
-
+        case "watchingVideo":
+        {
+            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
+                $res->isSuccess = FALSE;
+                $res->code = 201;
+                $res->message = "유효하지 않은 토큰입니다";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                addErrorLogs($errorLogs, $res, $req);
+                return;
+            }
+            $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
+            $id = $data->id;
+            $contentsNo = $req->contentsNo;
+            if (empty($contentsNo)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "공백이 입력되었습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else if (!is_numeric($contentsNo)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "번호를 숫자로 입력해주세요.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else if (validNo($contentsNo) == 0) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else {
+                if (alreadyWatching($id, $contentsNo)) {
+                    $res->result = countPlay($id, $contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 201;
+                    $res->message = "재생 기록 카운트";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                } else {
+                    $res->result = watchingVideo($id, $contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "시청 중인 재생 목록에 추가";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
+            }
+        }
 
 
 

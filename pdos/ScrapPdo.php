@@ -121,3 +121,35 @@ function deleteDislikes($id, $contentsNo){
     $st = null;
     $pdo = null;
 }
+
+function watchingVideo($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "insert into WatchingVideo (userId, contentsNo) values (?,?);";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st = null;
+    $pdo = null;
+}
+
+function countPlay($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "update WatchingVideo set hit = hit + 1 where userId = ? and contentsNo = ?";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st = null;
+    $pdo = null;
+}
+
+function alreadyWatching($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select exists(select * from WatchingVideo where userId = ? and contentsNo = ?)AS exist;";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+
+    $st=null;$pdo = null;
+
+    return intval($res[0]["exist"]);
+
+}
