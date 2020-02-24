@@ -45,6 +45,19 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/contents/{contentsNo}/similar', ['IndexController', 'similarContents']);
     $r->addRoute('GET', '/movie/main', ['IndexController', 'movieMain']);
 
+    $r->addRoute('GET', '/contents/{genreNo}/list', ['IndexController', 'selectContentsGenre']); //장르별 콘텐츠 리스트
+    $r->addRoute('GET', '/contents/list/popular', ['IndexController', 'contentsPopular']);
+    $r->addRoute('GET', '/contents/list/newAdd', ['IndexController', 'contentsNewAdd']);
+    $r->addRoute('GET', '/contents/{genreNo1}/list/{genreNo2}', ['IndexController', 'contentsSecondGenre']);
+    $r->addRoute('GET', '/contents/{genreNo}/popular', ['IndexController', 'contentsGenrePopular']);
+    $r->addRoute('GET', '/contents/{genreNo}/newAdd', ['IndexController', 'contentsGenreNewAdd']);
+
+    $r->addRoute('GET', '/tv/{genreNo}/list', ['IndexController', 'selectTVGenre']); //장르별 콘텐츠 리스트
+    $r->addRoute('GET', '/tv/list/popular', ['IndexController', 'tvPopular']);
+    $r->addRoute('GET', '/tv/list/newAdd', ['IndexController', 'tvNewAdd']);
+    $r->addRoute('GET', '/tv/{genreNo}/newAdd', ['IndexController', 'tvGenreNewAdd']);
+    $r->addRoute('GET', '/tv/{genreNo1}/list/{genreNo2}', ['IndexController', 'tvSecondGenre']);
+    $r->addRoute('GET', '/tv/{genreNo}/popular', ['IndexController', 'tvGenrePopular']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
 //    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
