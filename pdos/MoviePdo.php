@@ -607,3 +607,49 @@ order by date desc limit 0,30;";
     $pdo = null;
     return $res;
 }
+
+function contentsSearch($keyword){
+    $pdo = pdoSqlConnect();
+    $query = "SELECT title, posterUrl from (SELECT Contents.no, posterUrl, title, videoUrl, Gerne1.description AS G1, Genre2.description AS G2, Genre3.description AS G3
+ FROM Contents INNER JOIN GenreList
+      ON Contents.no = GenreList.contentsNo
+           INNER JOIN Genre AS Gerne1
+      ON GenreList.genre1 = Gerne1.no
+ INNER JOIN Genre AS Genre2
+ ON GenreList.genre2 = Genre2.no
+ LEFT JOIN Genre AS Genre3
+ ON GenreList.genre3 = Genre3.no
+    order by no desc)as searchTB
+where title like '%$keyword%' limit 21;";
+    $st = $pdo->prepare($query);
+    $st->execute([$keyword]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function contentsList(){
+    $pdo = pdoSqlConnect();
+    $query = "select title, posterUrl from Contents order by no desc;";
+    $st = $pdo->prepare($query);
+    $st->execute();
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function seriesList($contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select contentsNo, no, seasonNum, episodeName, runtime, overview, posterUrl, videoUrl from Series where contentsNo = ?";
+    $st = $pdo->prepare($query);
+    $st->execute([$contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}

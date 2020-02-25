@@ -76,6 +76,7 @@ try {
 
         case "movieDetail" :
             $contentsNo = $vars["contentsNo"];
+//            $res->result = movieDetail($contentsNo);
             if(!is_numeric($contentsNo)){ //이건 왜 체크가 안되지..
                 http_response_code(200);
                 $res->isSuccess = FALSE;
@@ -94,6 +95,7 @@ try {
                 }
                 http_response_code(200);
                 $res->result = movieDetail($contentsNo);
+                $res->result["season info"] = seriesList($contentsNo);
                 $res->isSuccess = TRUE;
                 $res->code = 100;
                 $res->message = "영화 정보 상세 조회 페이지";
@@ -698,6 +700,38 @@ try {
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
             }
+
+        case "searchContents":
+            $keyword = $_GET["keyword"];
+            if(empty($keyword)) {
+                http_response_code(200);
+                $res->result = contentsList();
+                $res->isSuccess = TRUE;
+                $res->code = 100;
+                $res->message = "영화 리스트 조회";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else {
+                if (contentsSearch($keyword) == null) {
+                    http_response_code(200);
+                    $res->isSuccess = FALSE;
+                    $res->code = 400;
+                    $res->message = "검색어와 일치하는 결과가 없습니다.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                } else {
+                    http_response_code(200);
+                    $res->result = contentsSearch($keyword);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "장르 별 영화 리스트 조회";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
+            }
+
+
+
 
 
     }

@@ -209,7 +209,7 @@ try {
         }
         case "watchingVideo":
         {
-            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];
             if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
                 $res->isSuccess = FALSE;
                 $res->code = 201;
@@ -256,6 +256,10 @@ try {
                     break;
                 }
             }
+        }
+
+        case "getUrl":{
+            $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         }
 
 
