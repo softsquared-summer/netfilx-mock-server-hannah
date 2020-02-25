@@ -60,12 +60,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/tv/{genreNo}/popular', ['IndexController', 'tvGenrePopular']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
-//    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
+    $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);
 //    $r->addRoute('GET', '/user', ['MainController', 'user']);//user/list 로 수정하면 사용가능 get url이 두개잖아.
-//    $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);
-////    $r->addRoute('GET', '/user', ['MainController', 'userDetail']);
-//    $r->addRoute('POST', '/user', ['MainController', 'signUp']);
-//    $r->addRoute('POST', '/user/token', ['MainController', 'login']);
+    $r->addRoute('GET', '/user/all', ['MainController', 'userAll']);
+    $r->addRoute('GET', '/user', ['MainController', 'userDetail']);
+    $r->addRoute('POST', '/user', ['MainController', 'signUp']);
+    $r->addRoute('POST', '/user/token', ['MainController', 'login']);
 ////
 //    $r->addRoute('GET', '/user/article', ['MainController', 'myArticle']);
 //    $r->addRoute('GET', '/user/comment', ['IndexController', 'myComment']);
