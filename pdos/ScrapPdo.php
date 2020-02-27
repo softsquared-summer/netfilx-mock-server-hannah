@@ -33,6 +33,16 @@ function validNo($contentsNo){
     return intval($res[0]["exist"]);
 }
 
+function validSeriesNo($contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "SELECT EXISTS(SELECT * FROM Series WHERE no = ?) AS exist;";
+    $st = $pdo->prepare($query);
+    $st->execute([$contentsNo]);
+    $res = $st->fetchAll();
+
+    return intval($res[0]["exist"]);
+}
+
 function deleteScrap($id, $contentsNo){
     $pdo = pdoSqlConnect();
     $query = "update Scrap set isDeleted = 'Y' where userId =? and contentsNo =?;";
@@ -45,10 +55,9 @@ function deleteScrap($id, $contentsNo){
 function myScrap($id){
     $pdo = pdoSqlConnect();
     $query = "select no, title, posterUrl from Contents
-inner join (select contentsNo, userId, isDeleted
-    from Scrap group by contentsNo) scrapTB
+inner join (select userId, contentsNo, isDeleted from Scrap) scrapTB
 on Contents.no = scrapTB.contentsNo
-where userId = ? and isDeleted = 'N';";
+where userId = ? and isDeleted = 'N'";
     $st = $pdo->prepare($query);
     $st->execute([$id]);
     $st->setFetchMode(PDO::FETCH_ASSOC);
@@ -151,5 +160,72 @@ function alreadyWatching($id, $contentsNo){
     $st=null;$pdo = null;
 
     return intval($res[0]["exist"]);
+}
 
+function tvWatchingList($id){
+    $pdo = pdoSqlConnect();
+    $query = "select * from (select no, contentsNo, seasonNum, episodeName, posterUrl, title, runtime, userId,
+                      cNo from WatchingVideo
+inner join
+    (select Series.no as sNo, contentsNo as sContetnsNo, seasonNum, episodeName, runtime from Series) S
+on WatchingVideo.contentsNo = sNo
+inner join
+    (select Contents.no as cNo, posterUrl, title from Contents) C
+on sContetnsNo = cNo
+    order by updatedAt desc) as watchLIST
+where userId = ?
+group by cNo;";
+    $st = $pdo->prepare($query);
+    $st->execute([$id]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function movieWatchingList($id){
+    $pdo = pdoSqlConnect();
+    $query = "select contentsNo, title, posterUrl, duration from WatchingVideo
+inner join (select no, title, duration, posterUrl, videoUrl from Contents) as cTB
+on WatchingVideo.contentsNo = cTB.no
+where userId = ?
+order by updatedAt desc;";
+    $st = $pdo->prepare($query);
+    $st->execute([$id]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function userScrapInfo($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no from Contents
+inner join (select userId, contentsNo, isDeleted from Scrap) scrapTB
+on Contents.no = scrapTB.contentsNo
+where userId = ? and no = ? and isDeleted = 'N';";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function userLikeInfo($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no, likeFlag from Contents
+inner join (select userId, contentsNo, likeFlag, isDeleted from Likes) likeTB
+on Contents.no = likeTB.contentsNo
+where userId = ? and contentsNo = ? and isDeleted = 'N';";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
 }

@@ -43,7 +43,7 @@ function isValidUser($id, $pw){
     return intval($res[0]["exist"]);
 }
 
-function sendFcm($fcmToken, $data, $key, $deviceType)
+function sendFcm($fcmToken, $data, $key)
 {
     $url = 'https://fcm.googleapis.com/fcm/send';
 
@@ -54,12 +54,12 @@ function sendFcm($fcmToken, $data, $key, $deviceType)
 
     $fields['data'] = $data;
 
-    if ($deviceType == 'IOS') {
+    //if ($deviceType == 'IOS') {
         $notification['title'] = $data['title'];
         $notification['body'] = $data['body'];
         $notification['sound'] = 'default';
         $fields['notification'] = $notification;
-    }
+    //}
 
     $fields['to'] = $fcmToken;
     $fields['content_available'] = true;
@@ -81,7 +81,7 @@ function sendFcm($fcmToken, $data, $key, $deviceType)
         //die('FCM Send Error: ' . curl_error($ch));
     }
     curl_close($ch);
-    return $result;
+    return $result; // 결과값 넣기.
 }
 
 function getTodayByTimeStamp()

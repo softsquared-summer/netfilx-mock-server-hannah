@@ -25,7 +25,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 //    $r->addRoute('GET', '/movie/list', ['IndexController', 'movieList']);
     $r->addRoute('GET', '/genre', ['IndexController', 'genreList']);
 
-    $r->addRoute('GET', '/contents/{contentsNo}', ['IndexController', 'movieDetail']);
+    $r->addRoute('GET', '/contents/{contentsNo}/detail', ['IndexController', 'movieDetail']);
 
     $r->addRoute('GET', '/movie/{genreNo}/list', ['IndexController', 'selectMovieGenre']); //장르별 영화 리스트
     $r->addRoute('GET', '/movie/list/popular', ['IndexController', 'movieDefaultPopular']);
@@ -37,6 +37,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute('POST', '/contents/scrap', ['ScrapController', 'contentsScrap']);
     $r->addRoute('GET', '/user/scrap', ['ScrapController', 'myScrap']);
+    $r->addRoute('GET', '/user/tv', ['ScrapController', 'tvWatchingList']);
+    $r->addRoute('GET', '/user/movie', ['ScrapController', 'movieWatchingList']);
+    $r->addRoute('GET', '/user/contents', ['ScrapController', 'contentsWatchingList']);
 
     $r->addRoute('POST', '/contents/likes', ['ScrapController', 'contentsLike']);
     $r->addRoute('POST', '/contents/dislikes', ['ScrapController', 'contentsDislikes']);
@@ -44,6 +47,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute('GET', '/contents/{contentsNo}/similar', ['IndexController', 'similarContents']);
     $r->addRoute('GET', '/movie/main', ['IndexController', 'movieMain']);
+    $r->addRoute('GET', '/tv/main', ['IndexController', 'tvMain']);
+    $r->addRoute('GET', '/contents/main', ['IndexController', 'contentsMain']);
 
     $r->addRoute('GET', '/contents/{genreNo}/list', ['IndexController', 'selectContentsGenre']); //장르별 콘텐츠 리스트
     $r->addRoute('GET', '/contents/list/popular', ['IndexController', 'contentsPopular']);
@@ -59,7 +64,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/tv/{genreNo1}/list/{genreNo2}', ['IndexController', 'tvSecondGenre']);
     $r->addRoute('GET', '/tv/{genreNo}/popular', ['IndexController', 'tvGenrePopular']);
 
-    $r->addRoute('POST', '/contents/search', ['IndexController', 'searchContents']);
+    $r->addRoute('GET', '/contents/search', ['IndexController', 'searchContents']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);

@@ -59,7 +59,7 @@ function selectTvGenre($genreNo, $lastNo){
 inner join (select contentsNo, genre1, genre2, genre3
     from GenreList group by contentsNo) TB
 on Contents.no = TB.contentsNo
-WHERE ? IN (genre1, genre2)
+WHERE ? IN (genre1, genre2) and type = 'TV Show'
 and Contents.no > ? order by no desc limit 0, 7;";
     $st = $pdo->prepare($query);
     $st->execute([$genreNo, $lastNo]);

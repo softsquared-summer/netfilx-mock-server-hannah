@@ -1,10 +1,10 @@
 <?php
-function signUp($type, $id, $pw)
+function signUp($type, $id, $hash)
 {
     $pdo = pdoSqlConnect();
     $query = "insert into User(subscriptionType,id,pw) values (?,?,?);";
     $st = $pdo->prepare($query);
-    $st->execute([$type, $id, $pw]);
+    $st->execute([$type, $id, $hash]);
     $st = null;
     $pdo = null;
 }
@@ -95,3 +95,26 @@ function UserAll(){
     return $res;
 }
 
+//function getPw($id){
+//    $pdo = pdoSqlConnect();
+//    $query = "select pw from Userwhere id = ?;";
+//    $st = $pdo->prepare($query);
+//    $st->execute([$id]);
+//    $st->setFetchMode(PDO::FETCH_ASSOC);
+//    $res = $st->fetchAll();
+//    $st = null;
+//    $pdo = null;
+//    return $res[0];
+//}
+
+function getPw($id){
+    $pdo = pdoSqlConnect();
+    $query = "select pw from User where id = ?;";
+    $st = $pdo->prepare($query);
+    $st->execute([$id]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}

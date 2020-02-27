@@ -6,6 +6,9 @@ const JWT_SECRET_KEY = "TEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEY
 $res = (Object)Array();//배열을 object로 변환
 header('Content-Type: json');
 $req = json_decode(file_get_contents("php://input"));
+//$res->result = array_filter($res);
+//var_dump($res->result);
+//print_r(array_filter($res));
 try {
     addAccessLogs($accessLogs, $req);
     switch ($handler) {
@@ -75,8 +78,18 @@ try {
 
 
         case "movieDetail" :
+            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
+                $res->isSuccess = FALSE;
+                $res->code = 201;
+                $res->message = "유효하지 않은 토큰입니다";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                addErrorLogs($errorLogs, $res, $req);
+                return;
+            }
+            $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
+            $id = $data->id;
             $contentsNo = $vars["contentsNo"];
-//            $res->result = movieDetail($contentsNo);
             if(!is_numeric($contentsNo)){ //이건 왜 체크가 안되지..
                 http_response_code(200);
                 $res->isSuccess = FALSE;
@@ -92,15 +105,28 @@ try {
                     $res->message = "존재하지 않는 컨텐츠 번호 입니다. 정확히 입력해주세요.";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
+                } else if (seriesList($contentsNo) == null) {
+                    http_response_code(200);
+                    $res->result = movieDetail($contentsNo);
+                    $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
+                    $res->result["likeStatus"] = userLikeInfo($id, $contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "영화 정보 상세 조회 페이지";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                } else{
+                    http_response_code(200);
+                    $res->result = movieDetail($contentsNo);
+                    $res->result["seasonInfo"] = seriesList($contentsNo);
+                    $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
+                    $res->result["likeStatus"] = userLikeInfo($id, $contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "영화 정보 상세 조회 페이지";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
                 }
-                http_response_code(200);
-                $res->result = movieDetail($contentsNo);
-                $res->result["season info"] = seriesList($contentsNo);
-                $res->isSuccess = TRUE;
-                $res->code = 100;
-                $res->message = "영화 정보 상세 조회 페이지";
-                echo json_encode($res, JSON_NUMERIC_CHECK);
-                break;
             }
 
         case "genreList" :
@@ -281,6 +307,36 @@ try {
             $res->isSuccess = TRUE;
             $res->code = 100;
             $res->message = "영화 메인 페이지";
+//            $result = array_filter( $res->result = movieMain(), 'strlen' );
+//            $result = array_filter($res, function($value) {
+//                return !is_null($value);
+//            });
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
+        case "contentsMain" :
+            http_response_code(200);
+            $res->result = allMain();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "콘텐츠 메인 페이지";
+//            $result = array_filter( $res->result = movieMain(), 'strlen' );
+//            $result = array_filter($res, function($res) {
+//                return !is_null($res);
+//            });
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
+        case "tvMain" :
+            http_response_code(200);
+            $res->result = tvMain();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "티비 메인 페이지";
+//            $result = array_filter( $res->result = movieMain(), 'strlen' );
+//            $result = array_filter($res, function($value) {
+//                return !is_null($value);
+//            });
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -729,9 +785,6 @@ try {
                     break;
                 }
             }
-
-
-
 
 
     }
