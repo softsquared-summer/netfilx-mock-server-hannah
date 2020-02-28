@@ -89,12 +89,12 @@ function getTodayByTimeStamp()
     return date("Y-m-d H:i:s");
 }
 
-function getJWToken($id, $pw, $secretKey)
+function getJWToken($id, $hash, $secretKey)
 {
     $data = array(
         'date' => (string)getTodayByTimeStamp(),
         'id' => (string)$id,
-        'pw' => (string)$pw
+        'pw' => (string)$hash
     );
 
 //    echo json_encode($data);
@@ -106,8 +106,7 @@ function getJWToken($id, $pw, $secretKey)
 //    print_r($decoded);
 }
 
-function getDataByJWToken($jwt, $secretKey)
-{
+function getDataByJWToken($jwt, $secretKey){
     try{
         $decoded = JWT::decode($jwt, $secretKey, array('HS256'));
     }catch(\Exception $e){

@@ -6,7 +6,7 @@ const JWT_SECRET_KEY = "TEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEY
 $res = (Object)Array();
 header('Content-Type: json');
 $req = json_decode(file_get_contents("php://input"));
-$res = array_filter($res, 'is_not_null');
+//$res = array_filter($res, 'is_not_null');
 
 try {
     addAccessLogs($accessLogs, $req);
