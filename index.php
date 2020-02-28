@@ -39,7 +39,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/user/scrap', ['ScrapController', 'myScrap']);
     $r->addRoute('GET', '/user/tv', ['ScrapController', 'tvWatchingList']);
     $r->addRoute('GET', '/user/movie', ['ScrapController', 'movieWatchingList']);
-    $r->addRoute('GET', '/user/contents', ['ScrapController', 'contentsWatchingList']);
+    $r->addRoute('GET', '/user/contents', ['ScrapController', 'contentsHistory']);
 
     $r->addRoute('POST', '/contents/likes', ['ScrapController', 'contentsLike']);
     $r->addRoute('POST', '/contents/dislikes', ['ScrapController', 'contentsDislikes']);
@@ -65,6 +65,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/tv/{genreNo}/popular', ['IndexController', 'tvGenrePopular']);
 
     $r->addRoute('GET', '/contents/search', ['IndexController', 'searchContents']);
+    $r->addRoute('GET', '/contents/latest', ['IndexController', 'latestContents']);
+    $r->addRoute('POST', '/contents', ['IndexController', 'addContents']);
+    $r->addRoute('PATCH', '/contents', ['IndexController', 'updateContents']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);

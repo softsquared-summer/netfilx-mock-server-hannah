@@ -43,12 +43,14 @@ function isValidUser($id, $pw){
     return intval($res[0]["exist"]);
 }
 
-function sendFcm($fcmToken, $data, $key)
+
+function sendFcm($fcmToken, $data)
 {
     $url = 'https://fcm.googleapis.com/fcm/send';
+    $key = "AAAAfMwzVsI:APA91bGM4HwQOJV75BWV05dw9d5m1hxBCA29PnMX8TSeSBG4bnvVl5ZPTwBse7roRjkDPYdCx5XqzbmhAnLkQdLHLm2RVf5OAvFMgM8HuIWWWQDgEd0R4l-oT-t9jUtdkMxrjnQQrb5-";
 
     $headers = array(
-        'Authorization: key=' . $key,
+        'Authorization: key='. $key,
         'Content-Type: application/json'
     );
 

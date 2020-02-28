@@ -221,17 +221,27 @@ try {
             $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
             $id = $data->id;
             $contentsNo = $req->contentsNo;
+            $type = $req->type;
+            $check_type = '/^[1-2]{1}$/';
 
-            if (empty($contentsNo)) {
+            if (empty($contentsNo) || empty($type)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "공백이 입력되었습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if (!is_numeric($contentsNo)) {
+            }
+            else if(!preg_match($check_type, "$type")) {
+                $res->isSucces = FALSE;
+                $res->code = 100;
+                $res->message = "콘텐츠의 타입을 1(Movie), 2(TV Show) 중 숫자로 선택해주세요";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }
+            else if (!is_numeric($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "번호를 숫자로 입력해주세요.";
+                $res->message = "콘텐츠 번호를 숫자로 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else if (!validNo($contentsNo) && (!validSeriesNo($contentsNo))) {
@@ -249,7 +259,7 @@ try {
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
                 } else {
-                    $res->result = watchingVideo($id, $contentsNo);
+                    $res->result = watchingVideo($id, $type, $contentsNo);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
                     $res->message = "시청 중인 재생 목록에 추가";
@@ -322,7 +332,38 @@ try {
                 break;
             }
 
-        case "contentsWatchingList":
+//        case "contentsWatchingList":
+//            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+//            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
+//                $res->isSuccess = FALSE;
+//                $res->code = 201;
+//                $res->message = "유효하지 않은 토큰입니다";
+//                echo json_encode($res, JSON_NUMERIC_CHECK);
+//                addErrorLogs($errorLogs, $res, $req);
+//                return;
+//            }
+//            $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
+//            $id = $data->id;
+//            if ((movieWatchingList($id) == null) && (tvWatchingList($id) == null)) {
+//                $res->isSucces = FALSE;
+//                $res->code = 00;
+//                $res->message = "사용자가 시청중인 콘텐츠가 없습니다.";
+//                echo json_encode($res, JSON_NUMERIC_CHECK);
+//                return;
+//            } else {
+//                http_response_code(200);
+//                $res->result->tv = (Object) Array();
+//                $res->result->movie = (Object) Array();
+//                $res->result->tv = tvWatchingList($id);
+//                $res->result->movie = movieWatchingList($id);
+//                $res->isSuccess = TRUE;
+//                $res->code = 100;
+//                $res->message = "시청중인 영화 목록 조회";
+//                echo json_encode($res, JSON_NUMERIC_CHECK);
+//                break;
+//            }
+
+        case "contentsHistory":
             $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
             if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
                 $res->isSuccess = FALSE;
@@ -334,7 +375,8 @@ try {
             }
             $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
             $id = $data->id;
-            if ((movieWatchingList($id) == null) && (tvWatchingList($id) == null)) {
+            $id2 = $data->id;
+            if (contentsHistory($id, $id2) == null) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
                 $res->message = "사용자가 시청중인 콘텐츠가 없습니다.";
@@ -342,16 +384,15 @@ try {
                 return;
             } else {
                 http_response_code(200);
-                $res->result->tv = (Object) Array();
-                $res->result->movie = (Object) Array();
-                $res->result->tv = tvWatchingList($id);
-                $res->result->movie = movieWatchingList($id);
+                $res->result = contentsHistory($id, $id2);
                 $res->isSuccess = TRUE;
                 $res->code = 100;
-                $res->message = "시청중인 영화 목록 조회";
+                $res->message = "시청중인 콘텐츠 목록 조회";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
             }
+
+
 
 
 

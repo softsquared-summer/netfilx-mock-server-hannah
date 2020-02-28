@@ -653,3 +653,44 @@ function seriesList($contentsNo){
     $pdo = null;
     return $res;
 }
+
+function addContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl){
+    $pdo = pdoSqlConnect();
+    $query = "insert into Contents (type, title, director, cast, overview, duration, `release`, rating, posterUrl, videoUrl) values (?,?,?,?,?,?,?,?,?,?);";
+    $st = $pdo->prepare($query);
+    $st->execute([$type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl]);
+    $st = null;
+    $pdo = null;
+}
+
+function updateContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl){
+    $pdo = pdoSqlConnect();
+    $query = "update Contents set type = ?,title = ?, director = ?, cast = ?, overview =?, duration = ?, `release` = ?,
+                               rating = ?, posterUrl = ?, videoUrl = ? where no = ?;";
+    $st = $pdo->prepare($query);
+    $st->execute([$type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl]);
+    $st = null;
+    $pdo = null;
+}
+
+function addSeries($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "insert into Likes (userId, contentsNo, likeFlag) values (?,?,1);";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st = null;
+    $pdo = null;
+}
+
+function latestContents(){
+    $pdo = pdoSqlConnect();
+    $query = "select no, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl from Contents
+order by no desc limit 0, 1;";
+    $st = $pdo->prepare($query);
+    $st->execute();
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res[0];
+}

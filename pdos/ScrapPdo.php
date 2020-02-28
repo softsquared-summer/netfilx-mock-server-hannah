@@ -131,11 +131,11 @@ function deleteDislikes($id, $contentsNo){
     $pdo = null;
 }
 
-function watchingVideo($id, $contentsNo){
+function watchingVideo($id, $type, $contentsNo){
     $pdo = pdoSqlConnect();
-    $query = "insert into WatchingVideo (userId, contentsNo) values (?,?);";
+    $query = "insert into WatchingVideo (userId, type, contentsNo) values (?,?,?);";
     $st = $pdo->prepare($query);
-    $st->execute([$id, $contentsNo]);
+    $st->execute([$id, $type, $contentsNo]);
     $st = null;
     $pdo = null;
 }
@@ -164,17 +164,18 @@ function alreadyWatching($id, $contentsNo){
 
 function tvWatchingList($id){
     $pdo = pdoSqlConnect();
-    $query = "select * from (select no, contentsNo, seasonNum, episodeName, posterUrl, title, runtime, userId,
-                      cNo from WatchingVideo
+    $query = "select contentsNo, title, posterUrl, duration from
+(select no, contentsNo, seasonNum as duration, episodeName as title, posterUrl, title as name, runtime, userId,
+                      cNo, updatedAt from WatchingVideo
 inner join
     (select Series.no as sNo, contentsNo as sContetnsNo, seasonNum, episodeName, runtime from Series) S
 on WatchingVideo.contentsNo = sNo
 inner join
     (select Contents.no as cNo, posterUrl, title from Contents) C
 on sContetnsNo = cNo
-    order by updatedAt desc) as watchLIST
-where userId = ?
-group by cNo;";
+where userId = ? and type = 2
+    )
+    as allContents order by updatedAt;";
     $st = $pdo->prepare($query);
     $st->execute([$id]);
     $st->setFetchMode(PDO::FETCH_ASSOC);
@@ -223,6 +224,34 @@ on Contents.no = likeTB.contentsNo
 where userId = ? and contentsNo = ? and isDeleted = 'N';";
     $st = $pdo->prepare($query);
     $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res;
+}
+
+function contentsHistory($id, $id2){
+    $pdo = pdoSqlConnect();
+    $query = "select contentsNo, title, posterUrl, duration from (select * from (select contentsNo, title, posterUrl, duration, updatedAt from WatchingVideo
+inner join (select no, title, duration, posterUrl, videoUrl from Contents) as cTB
+on WatchingVideo.contentsNo = cTB.no
+where userId = ? and type = 1) AS M
+UNION all
+select contentsNo, title, posterUrl, duration, updatedAt from
+(select no, contentsNo, seasonNum as duration, episodeName as title, posterUrl, title as name, runtime, userId,
+                      cNo, updatedAt from WatchingVideo
+inner join
+    (select Series.no as sNo, contentsNo as sContetnsNo, seasonNum, episodeName, runtime from Series) S
+on WatchingVideo.contentsNo = sNo
+inner join
+    (select Contents.no as cNo, posterUrl, title from Contents) C
+on sContetnsNo = cNo
+where userId = ? and type = 2
+    ) as T)
+    as allContents order by updatedAt;";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $id2]);
     $st->setFetchMode(PDO::FETCH_ASSOC);
     $res = $st->fetchAll();
     $st = null;

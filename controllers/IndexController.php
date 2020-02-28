@@ -41,16 +41,14 @@ try {
                 $res->message = "게시글 번호는 숫자를 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }
-            else if (!is_numeric($genreNo)) {
+            } else if (!is_numeric($genreNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "장르 번호는 숫자를 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }
-            else if (!validGenreNo($genreNo)){
+            } else if (!validGenreNo($genreNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
@@ -58,22 +56,22 @@ try {
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
-            if(selectMovieGenre($genreNo, $lastNo)==null){
-                http_response_code(200);
-                $res->isSuccess = FALSE;
-                $res->code = 400;
-                $res->message = "해당 장르에 존재하는 영화가 아직 없습니다. 다른 장르를 선택해주세요.";
-                echo json_encode($res, JSON_NUMERIC_CHECK);
-                return;
-            } else {
-                http_response_code(200);
-                $res->result = selectMovieGenre($genreNo, $lastNo);
-                $res->isSuccess = TRUE;
-                $res->code = 100;
-                $res->message = "장르 별 영화 리스트 조회";
-                echo json_encode($res, JSON_NUMERIC_CHECK);
-                break;
-            }
+                if (selectMovieGenre($genreNo, $lastNo) == null) {
+                    http_response_code(200);
+                    $res->isSuccess = FALSE;
+                    $res->code = 400;
+                    $res->message = "해당 장르에 존재하는 영화가 아직 없습니다. 다른 장르를 선택해주세요.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                } else {
+                    http_response_code(200);
+                    $res->result = selectMovieGenre($genreNo, $lastNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "장르 별 영화 리스트 조회";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
             }
 
 
@@ -90,7 +88,7 @@ try {
             $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
             $id = $data->id;
             $contentsNo = $vars["contentsNo"];
-            if(!is_numeric($contentsNo)){ //이건 왜 체크가 안되지..
+            if (!is_numeric($contentsNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
@@ -115,7 +113,7 @@ try {
                     $res->message = "영화 정보 상세 조회 페이지";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     break;
-                } else{
+                } else {
                     http_response_code(200);
                     $res->result = movieDetail($contentsNo);
                     $res->result["seasonInfo"] = seriesList($contentsNo);
@@ -138,7 +136,8 @@ try {
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
-        case "movieDefaultPopular" : {
+        case "movieDefaultPopular" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -157,7 +156,8 @@ try {
             break;
         }
 
-        case "movieNewAdd" : {
+        case "movieNewAdd" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -202,16 +202,25 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else {
+            } else if (secondGenre($genre1, $genre2, $lastNo) == null) {
                 http_response_code(200);
-                $res->result = secondGenre($genre1, $genre2, $lastNo);
-                $res->isSuccess = TRUE;
-                $res->code = 100;
-                $res->message = "장르 별 영화 조회";
+                $res->isSuccess = FALSE;
+                $res->code = 400;
+                $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
-                break;
+                return;
             }
-        }
+                else{
+                    http_response_code(200);
+                    $res->result = secondGenre($genre1, $genre2, $lastNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "장르 별 영화 조회";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
+            }
+
 
         case "genrePopular" :
         {
@@ -351,15 +360,14 @@ try {
                 $res->message = "게시글 번호는 숫자를 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }
-            else if(!validGenreNo($genreNo)){
+            } else if (!validGenreNo($genreNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(selectContentsGenre($genreNo, $lastNo) == null){
+            } else if (selectContentsGenre($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
@@ -387,15 +395,14 @@ try {
                 $res->message = "게시글 번호는 숫자를 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }
-            else if(!validGenreNo($genreNo)){
+            } else if (!validGenreNo($genreNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(selectTvGenre($genreNo, $lastNo) == null){
+            } else if (selectTvGenre($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
@@ -412,7 +419,8 @@ try {
                 break;
             }
 
-        case "contentsPopular" : {
+        case "contentsPopular" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -431,7 +439,8 @@ try {
             break;
         }
 
-        case "tvPopular" : {
+        case "tvPopular" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -450,7 +459,8 @@ try {
             break;
         }
 
-        case "contentsNewAdd" : {
+        case "contentsNewAdd" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -469,7 +479,8 @@ try {
             break;
         }
 
-        case "tvNewAdd" : {
+        case "tvNewAdd" :
+        {
             $lastNo = $_GET["lastNo"];
             if (!is_numeric($lastNo)) {
                 http_response_code(200);
@@ -515,14 +526,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(contentsSecondGenre($genre1, $genre2, $lastNo)==null){
+            } else if (contentsSecondGenre($genre1, $genre2, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = contentsSecondGenre($genre1, $genre2, $lastNo);
                 $res->isSuccess = TRUE;
@@ -559,14 +570,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(tvSecondGenre($genre1, $genre2, $lastNo)==null){
+            } else if (tvSecondGenre($genre1, $genre2, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = tvSecondGenre($genre1, $genre2, $lastNo);
                 $res->isSuccess = TRUE;
@@ -595,14 +606,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(contentsGenrePopular($genreNo, $lastNo) == null){
+            } else if (contentsGenrePopular($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = contentsGenrePopular($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -631,14 +642,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(tvGenrePopular($genreNo, $lastNo) == null){
+            } else if (tvGenrePopular($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = tvGenrePopular($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -667,14 +678,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(contentsGenreNewAdd($genreNo, $lastNo)==null){
+            } else if (contentsGenreNewAdd($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = contentsGenreNewAdd($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -703,14 +714,14 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(tvGenreNewAdd($genreNo, $lastNo)==null){
+            } else if (tvGenreNewAdd($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else{
+            } else {
                 http_response_code(200);
                 $res->result = tvGenreNewAdd($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -732,15 +743,14 @@ try {
                 $res->message = "게시글 번호는 숫자를 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }
-            else if(!validGenreNo($genreNo)){
+            } else if (!validGenreNo($genreNo)) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else if(tvSecondGenre($genreNo, $lastNo) == null){
+            } else if (tvSecondGenre($genreNo, $lastNo) == null) {
                 http_response_code(200);
                 $res->isSuccess = FALSE;
                 $res->code = 400;
@@ -759,7 +769,7 @@ try {
 
         case "searchContents":
             $keyword = $_GET["keyword"];
-            if(empty($keyword)) {
+            if (empty($keyword)) {
                 http_response_code(200);
                 $res->result = contentsList();
                 $res->isSuccess = TRUE;
@@ -767,7 +777,7 @@ try {
                 $res->message = "영화 리스트 조회";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else {
+            } else {
                 if (contentsSearch($keyword) == null) {
                     http_response_code(200);
                     $res->isSuccess = FALSE;
@@ -785,6 +795,141 @@ try {
                     break;
                 }
             }
+
+        case "addContents":
+            $type = $req->type;
+            $title = $req->title;
+            $director = $req->director;
+            $cast = $req->cast;
+            $overview = $req->overview;
+            $duration = $req->duration;
+            $release = $req->release;
+            $rating = $req->rating;
+            $posterUrl = $req->posterUrl;
+            $videoUrl = $req->videoUrl;
+            $checkUrl = filter_Var($videoUrl, FILTER_VALIDATE_URL);
+//            if ( preg_match('/^(\d{4})$/',$release,$match) && checkdate($match[4])) {
+//            if(preg_match("/\.(img)$/i",$posterUrl));
+//            if(preg_match("/\.(gif|jpg|bmp)$/i",$posterUrl))
+
+            if (empty($type)||empty($title)||empty($director)||empty($cast)||empty($overview)||empty($duration)||empty($release)
+                ||empty($rating)||empty($posterUrl)||empty($videoUrl)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "공백이 입력되었습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else if($checkUrl == false){
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "videoUrl의 값이 유효하지 않습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else if(!preg_match("/\.(jpg)$/i",$posterUrl)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "posterUrl 의 값이 유효하지 않습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else if (!preg_match('/^(\d{4})$/',$release) && checkdate(1,1,$release[1])) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "release 의 값이 유효하지 않습니다. 개봉연도를 정확히 입력해주세요";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else {
+                http_response_code(200);
+                $res->result = addContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl);
+                $res->isSuccess = TRUE;
+                $res->code = 100;
+                $res->message = "콘텐츠 추가 성공";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                break;
+            }
+
+        case "updateContents":
+            $contentsNo = $req->contentsNo;
+            $type = $req->type;
+            $title = $req->title;
+            $director = $req->director;
+            $cast = $req->cast;
+            $overview = $req->overview;
+            $duration = $req->duration;
+            $release = $req->release;
+            $rating = $req->rating;
+            $posterUrl = $req->posterUrl;
+            $videoUrl = $req->videoUrl;
+            $checkUrl = filter_Var($videoUrl, FILTER_VALIDATE_URL);
+//            if ( preg_match('/^(\d{4})$/',$release,$match) && checkdate($match[4])) {
+//            if(preg_match("/\.(img)$/i",$posterUrl));
+//            if(preg_match("/\.(gif|jpg|bmp)$/i",$posterUrl))
+
+//            if (empty($type)||empty($title)||empty($director)||empty($cast)||empty($overview)||empty($duration)||empty($release)
+//                ||empty($rating)||empty($posterUrl)||empty($videoUrl)) {
+//                $res->isSucces = FALSE;
+//                $res->code = 00;
+//                $res->message = "공백이 입력되었습니다.";
+//                echo json_encode($res, JSON_NUMERIC_CHECK);
+//                return;
+//            }else
+                if($checkUrl == false){
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "videoUrl의 값이 유효하지 않습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else if(!preg_match("/\.(jpg)$/i",$posterUrl)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "posterUrl 의 값이 유효하지 않습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else if (!preg_match('/^(\d{4})$/',$release) && checkdate(1,1,$release[1])) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "release 의 값이 유효하지 않습니다. 개봉연도를 정확히 입력해주세요";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            }else {
+                http_response_code(200);
+                $res->result = updateContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl, $contentsNo);
+                $res->isSuccess = TRUE;
+                $res->code = 100;
+                $res->message = "콘텐츠 내용 수정 성공";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                break;
+            }
+
+
+            case
+                "latestContents" :
+            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
+                $res->isSuccess = FALSE;
+                $res->code = 201;
+                $res->message = "유효하지 않은 토큰입니다";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                addErrorLogs($errorLogs, $res, $req);
+                return;
+            }
+            $data = getDataByJWToken($jwt, JWT_SECRET_KEY);
+            $id = $data->id;
+            http_response_code(200);
+            $res->result = latestContents();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "새로 등록된 콘텐츠 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
+
+        case "sendFcm" :
+            http_response_code(200);
+            $res->result = latestContents();
+            $res->isSuccess = TRUE;
+            $res->code = 100;
+            $res->message = "새로 등록된 콘텐츠 조회";
+            echo json_encode($res, JSON_NUMERIC_CHECK);
+            break;
 
 
     }
