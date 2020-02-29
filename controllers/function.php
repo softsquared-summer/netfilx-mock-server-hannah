@@ -47,21 +47,19 @@ function isValidUser($id, $pw){
 function sendFcm($fcmToken, $data)
 {
     $url = 'https://fcm.googleapis.com/fcm/send';
-    $key = "AAAAfMwzVsI:APA91bGM4HwQOJV75BWV05dw9d5m1hxBCA29PnMX8TSeSBG4bnvVl5ZPTwBse7roRjkDPYdCx5XqzbmhAnLkQdLHLm2RVf5OAvFMgM8HuIWWWQDgEd0R4l-oT-t9jUtdkMxrjnQQrb5-";
-
+    $key = "AAAAKX9eur0:APA91bH0ybAgZWKjWxUnzJwFkVmFbRZnwwD1P30EhWzq0cj370-k5NaE80Kz9djoj-QO9aUiWsTp6fIBtGYoZW8PIJ2EuagQftUQI4disHFE4RzXdDZ7pFSY0gbYVVnlEExweqITbd8M";
     $headers = array(
         'Authorization: key='. $key,
         'Content-Type: application/json'
     );
-
+//
     $fields['data'] = $data;
-
-    //if ($deviceType == 'IOS') {
+//    //if ($deviceType == 'IOS') {
         $notification['title'] = $data['title'];
         $notification['body'] = $data['body'];
         $notification['sound'] = 'default';
         $fields['notification'] = $notification;
-    //}
+//    //}
 
     $fields['to'] = $fcmToken;
     $fields['content_available'] = true;

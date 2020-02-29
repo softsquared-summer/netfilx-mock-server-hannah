@@ -14,7 +14,7 @@ use Monolog\Handler\StreamHandler;
 
 date_default_timezone_set('Asia/Seoul');
 ini_set('default_charset', 'utf8mb4');
-
+//$fcmToken = "d6DvQXqrVJc:APA91bFUL1iYVCY-k8Cr18WJ40GoqPw-EJJ0Vra8owhxNVuvJF-S2j6YRk8vb7iKju74LGaAII_ml40OQMLzhMpcZF2iPE58nEpNaezATBmffjT6WlKNK-fMtHwKdaA6OLJzGlIOjZ9O";
 ////에러출력하게 하는 코드
 //error_reporting(E_ALL); ini_set("display_errors", 1);
 
@@ -68,6 +68,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/contents/latest', ['IndexController', 'latestContents']);
     $r->addRoute('POST', '/contents', ['IndexController', 'addContents']);
     $r->addRoute('PATCH', '/contents', ['IndexController', 'updateContents']);
+    $r->addRoute('GET', '/sendFcm', ['IndexController', 'sendFcm']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);

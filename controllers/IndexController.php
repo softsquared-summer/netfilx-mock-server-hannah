@@ -2,10 +2,10 @@
 require 'function.php';
 
 const JWT_SECRET_KEY = "TEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEYTEST_KEY";
-
 $res = (Object)Array();//배열을 object로 변환
 header('Content-Type: json');
 $req = json_decode(file_get_contents("php://input"));
+
 //$res->result = array_filter($res);
 //var_dump($res->result);
 //print_r(array_filter($res));
@@ -797,6 +797,13 @@ try {
             }
 
         case "addContents":
+            $fcmToken = "d6DvQXqrVJc:APA91bFUL1iYVCY-k8Cr18WJ40GoqPw-EJJ0Vra8owhxNVuvJF-S2j6YRk8vb7iKju74LGaAII_ml40OQMLzhMpcZF2iPE58nEpNaezATBmffjT6WlKNK-fMtHwKdaA6OLJzGlIOjZ9O";
+            $data = array(
+                "title" => "netflix 알림",
+                "body" => "새로운 콘텐츠가 등록되었습니다. 확인해보세요!",
+                "link" => URL . "/contents/latest"
+            );
+            sendFcm($fcmToken, $data);
             $type = $req->type;
             $title = $req->title;
             $director = $req->director;
@@ -845,6 +852,7 @@ try {
                 $res->message = "콘텐츠 추가 성공";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
+
             }
 
         case "updateContents":
@@ -872,32 +880,55 @@ try {
 //                echo json_encode($res, JSON_NUMERIC_CHECK);
 //                return;
 //            }else
-                if($checkUrl == false){
+            if (empty($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "videoUrl의 값이 유효하지 않습니다.";
+                $res->message = "공백이 입력되었습니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else if(!preg_match("/\.(jpg)$/i",$posterUrl)) {
+            } else if (!is_numeric($contentsNo)) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "posterUrl 의 값이 유효하지 않습니다.";
+                $res->message = "번호를 숫자로 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            }else if (!preg_match('/^(\d{4})$/',$release) && checkdate(1,1,$release[1])) {
+            } else if (validNo($contentsNo) == 0) {
                 $res->isSucces = FALSE;
                 $res->code = 00;
-                $res->message = "release 의 값이 유효하지 않습니다. 개봉연도를 정확히 입력해주세요";
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             }else {
-                http_response_code(200);
-                $res->result = updateContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl, $contentsNo);
-                $res->isSuccess = TRUE;
-                $res->code = 100;
-                $res->message = "콘텐츠 내용 수정 성공";
-                echo json_encode($res, JSON_NUMERIC_CHECK);
-                break;
+                if(isset($videoUrl)){
+
+                }
+                if($checkUrl == false){
+                    $res->isSucces = FALSE;
+                    $res->code = 00;
+                    $res->message = "videoUrl의 값이 유효하지 않습니다.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }else if(!preg_match("/\.(jpg)$/i",$posterUrl)) {
+                    $res->isSucces = FALSE;
+                    $res->code = 00;
+                    $res->message = "posterUrl 의 값이 유효하지 않습니다.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }else if (!preg_match('/^(\d{4})$/',$release) && checkdate(1,1,$release[1])) {
+                    $res->isSucces = FALSE;
+                    $res->code = 00;
+                    $res->message = "release 의 값이 유효하지 않습니다. 개봉연도를 정확히 입력해주세요";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }else {
+                    http_response_code(200);
+                    $res->result = updateContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl, $contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "콘텐츠 내용 수정 성공";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
             }
 
 
@@ -923,13 +954,58 @@ try {
             break;
 
         case "sendFcm" :
+            $fcmToken = "d6DvQXqrVJc:APA91bFUL1iYVCY-k8Cr18WJ40GoqPw-EJJ0Vra8owhxNVuvJF-S2j6YRk8vb7iKju74LGaAII_ml40OQMLzhMpcZF2iPE58nEpNaezATBmffjT6WlKNK-fMtHwKdaA6OLJzGlIOjZ9O";
+            $data = array(
+                "title" => "netflix 알림",
+                "body" => "새로운 콘텐츠가 등록되었습니다. 확인해보세요!",
+                "link" => URL . "/contents/latest"
+            );
             http_response_code(200);
-            $res->result = latestContents();
+            $res->result = sendFcm($fcmToken, $data);
+
             $res->isSuccess = TRUE;
             $res->code = 100;
-            $res->message = "새로 등록된 콘텐츠 조회";
+            $res->message = "fcm";
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
+
+        case "deleteContents":
+            $contentsNo = $req->contentsNo;
+            if (empty($contentsNo)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "공백이 입력되었습니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else if (!is_numeric($contentsNo)) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "번호를 숫자로 입력해주세요.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else if (validNo($contentsNo) == 0) {
+                $res->isSucces = FALSE;
+                $res->code = 00;
+                $res->message = "존재하지 않는 콘텐츠 번호입니다.";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                return;
+            } else {
+                if (deleteContents($contentsNo)) {
+                    $res->result = deleteContents($contentsNo);
+                    $res->isSuccess = FALSE;
+                    $res->code = 201;
+                    $res->message = "스크랩 목록 삭제";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                } else {
+                    $res->result = deleteContents($contentsNo);
+                    $res->isSuccess = TRUE;
+                    $res->code = 100;
+                    $res->message = "콘텐츠 삭제";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    break;
+                }
+            }
 
 
     }

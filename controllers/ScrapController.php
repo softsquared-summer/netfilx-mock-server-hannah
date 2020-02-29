@@ -392,11 +392,6 @@ try {
                 break;
             }
 
-
-
-
-
-
     }
 } catch (\Exception $e) {
     return getSQLErrorException($errorLogs, $e, $req);

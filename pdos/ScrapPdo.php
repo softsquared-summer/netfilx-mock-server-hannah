@@ -213,12 +213,12 @@ where userId = ? and no = ? and isDeleted = 'N';";
     $res = $st->fetchAll();
     $st = null;
     $pdo = null;
-    return $res;
+    return $res[0];
 }
 
 function userLikeInfo($id, $contentsNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, likeFlag from Contents
+    $query = "select likeFlag from Contents
 inner join (select userId, contentsNo, likeFlag, isDeleted from Likes) likeTB
 on Contents.no = likeTB.contentsNo
 where userId = ? and contentsNo = ? and isDeleted = 'N';";
@@ -228,7 +228,7 @@ where userId = ? and contentsNo = ? and isDeleted = 'N';";
     $res = $st->fetchAll();
     $st = null;
     $pdo = null;
-    return $res;
+    return $res[0];
 }
 
 function contentsHistory($id, $id2){

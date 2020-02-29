@@ -73,7 +73,7 @@ and Contents.no > ? order by no desc limit 0, 7;";
 
 function movieDetail($movieNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl from Contents
+    $query = "select no,type, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl from Contents
 where no = ?;";
     $st = $pdo->prepare($query);
     $st->execute([$movieNo]);
@@ -126,7 +126,7 @@ where listed_in like ?;";
 
 function movieDefaultPopular($lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular, `release` from Contents
+    $query = "select no, type, Contents.title, posterUrl, popular, `release` from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -146,7 +146,7 @@ order by popular desc limit 0, 7;";
 
 function movieNewAdd($lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, title, posterUrl, `release` from Contents
+    $query = "select no, type, title, posterUrl, `release` from Contents
 where type = 'Movie' and Contents.no > ? order by date desc limit 0,7;";
     $st = $pdo->prepare($query);
     $st->execute([$lastNo]);
@@ -254,7 +254,7 @@ and type = 'Movie' and Contents.no > ? order by date desc limit 0, 7;";
 
 function genrePopular($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular from Contents
+    $query = "select no, type, Contents.title, posterUrl, popular from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -274,7 +274,7 @@ and Contents.no > ? order by popular desc limit 0, 7;";
 
 function genreNewAdd($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl from Contents
+    $query = "select no, type, Contents.title, posterUrl from Contents
 inner join (select contentsNo, genre1, genre2, genre3
 from GenreList group by contentsNo) genreTB
 on Contents.no = genreTB.contentsNo
@@ -302,7 +302,7 @@ function validGenreNo($genreNo){
 
 function similarContents($contentsNo1, $contentsNo2, $contentsNo3){
     $pdo = pdoSqlConnect();
-    $query = "select Contents.no, title, posterUrl from Contents
+    $query = "select Contents.no, type, title, posterUrl from Contents
 inner join (select contentsNo, genre1, genre2, genre3
     from GenreList group by contentsNo)genreTB
 on Contents.no = genreTB.contentsNo
@@ -334,7 +334,7 @@ order by Contents. no desc limit 0, 6;";
 function movieMain(){
     $pdo = pdoSqlConnect();
     $query = "SELECT *
-    FROM (SELECT Contents.no, posterUrl, title, videoUrl, Gerne1.description as G1, Genre2.description as G2, Genre3.description as G3
+    FROM (SELECT Contents.no, posterUrl, title, videoUrl, type, Gerne1.description as G1, Genre2.description as G2, Genre3.description as G3
  FROM Contents INNER JOIN GenreList
       ON Contents.no = GenreList.contentsNo
            INNER JOIN Genre as Gerne1
@@ -361,7 +361,7 @@ limit 10) as randomContents
 function tvMain(){
     $pdo = pdoSqlConnect();
     $query = "SELECT *
-    FROM (SELECT Contents.no, posterUrl, title, videoUrl, Gerne1.description as G1, Genre2.description as G2, Genre3.description as G3
+    FROM (SELECT Contents.no, posterUrl, title, videoUrl, type, Gerne1.description as G1, Genre2.description as G2, Genre3.description as G3
  FROM Contents INNER JOIN GenreList
       ON Contents.no = GenreList.contentsNo
            INNER JOIN Genre as Gerne1
@@ -388,7 +388,7 @@ limit 10) as randomContents
 function allMain(){
     $pdo = pdoSqlConnect();
     $query = "SELECT *
-    FROM (SELECT Contents.no, posterUrl, title, videoUrl, Gerne1.description AS G1, Genre2.description AS G2, Genre3.description AS G3
+    FROM (SELECT Contents.no, type, posterUrl, title, videoUrl, Gerne1.description AS G1, Genre2.description AS G2, Genre3.description AS G3
  FROM Contents INNER JOIN GenreList
       ON Contents.no = GenreList.contentsNo
            INNER JOIN Genre AS Gerne1
@@ -411,7 +411,7 @@ LIMIT 10) AS randomContents
 
 function contentsDefaultPopular($lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular, `release` from Contents
+    $query = "select no, Contents.title, posterUrl, popular, `release`, type from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -449,7 +449,7 @@ order by popular desc limit 0, 7;";
 
 function contentsNewAdd($lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, title, posterUrl, `release` from Contents
+    $query = "select no, title, posterUrl, `release`, type from Contents
 where Contents.no > ? order by date desc limit 0,7;";
     $st = $pdo->prepare($query);
     $st->execute([$lastNo]);
@@ -480,7 +480,7 @@ where type = 'TV Show' and Contents.no > ? order by no desc limit 0,7;";
 
 function tvDefaultPopular($lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular, `release` from Contents
+    $query = "select no, Contents.title, posterUrl, popular, `release`, type from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -534,7 +534,7 @@ and type = 'TV Show' and Contents.no > ? order by no desc limit 0, 7;";
 
 function contentsGenrePopular($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular from Contents
+    $query = "select no, Contents.title, posterUrl, popular, type from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -554,7 +554,7 @@ and Contents.no > ? order by popular desc limit 0, 7;";
 
 function tvGenrePopular($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl, popular from Contents
+    $query = "select no, Contents.title, posterUrl, popular, type from Contents
 inner join (select MovieData.title, popularity as popular
 from MovieData group by MovieData.title, popularity) dataTB
 on Contents.title = dataTB.title
@@ -574,7 +574,7 @@ and Contents.no > ? order by popular desc limit 0, 7;";
 
 function contentsGenreNewAdd($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl from Contents
+    $query = "select no, Contents.title, posterUrl, type from Contents
 inner join (select contentsNo, genre1, genre2, genre3
 from GenreList group by contentsNo) genreTB
 on Contents.no = genreTB.contentsNo
@@ -592,7 +592,7 @@ order by date desc limit 0,30;";
 
 function tvGenreNewAdd($genreNo, $lastNo){
     $pdo = pdoSqlConnect();
-    $query = "select no, Contents.title, posterUrl from Contents
+    $query = "select no, Contents.title, posterUrl, type from Contents
 inner join (select contentsNo, genre1, genre2, genre3
 from GenreList group by contentsNo) genreTB
 on Contents.no = genreTB.contentsNo
@@ -673,6 +673,19 @@ function updateContents($type, $title, $director, $cast, $overview, $duration, $
     $pdo = null;
 }
 
+function deleteContents($contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "update Contents set isDeleted = 'Y' where no = ?";
+    $st = $pdo->prepare($query);
+    $st->execute([$contentsNo]);
+    $st = null;
+    $pdo = null;
+}
+
+function alreadyDelete($contentsNo){
+
+}
+
 function addSeries($id, $contentsNo){
     $pdo = pdoSqlConnect();
     $query = "insert into Likes (userId, contentsNo, likeFlag) values (?,?,1);";
@@ -684,7 +697,7 @@ function addSeries($id, $contentsNo){
 
 function latestContents(){
     $pdo = pdoSqlConnect();
-    $query = "select no, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl from Contents
+    $query = "select no, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl, type from Contents
 order by no desc limit 0, 1;";
     $st = $pdo->prepare($query);
     $st->execute();
