@@ -56,7 +56,7 @@ try {
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
                 } else {
-                    $res->result = Scrap($id, $contentsNo);
+                    Scrap($id, $contentsNo);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
                     $res->message = "스크랩 목록 추가";

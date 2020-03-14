@@ -68,7 +68,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/contents/latest', ['IndexController', 'latestContents']);
     $r->addRoute('POST', '/contents', ['IndexController', 'addContents']);
     $r->addRoute('PATCH', '/contents', ['IndexController', 'updateContents']);
+    $r->addRoute('DELETE', '/contents', ['IndexController', 'deleteContents']);
     $r->addRoute('GET', '/sendFcm', ['IndexController', 'sendFcm']);
+    $r->addRoute('GET', '/validateJWT', ['MainController', 'validateJWT']);
 
     $r->addRoute('GET', '/', ['IndexController', 'index']);
     $r->addRoute('GET', '/listTest', ['ScrapController', 'list']);

@@ -675,7 +675,7 @@ function updateContents($type, $title, $director, $cast, $overview, $duration, $
 
 function deleteContents($contentsNo){
     $pdo = pdoSqlConnect();
-    $query = "update Contents set isDeleted = 'Y' where no = ?";
+    $query = "update Contents set isDelete = 'Y' where no = ?;";
     $st = $pdo->prepare($query);
     $st->execute([$contentsNo]);
     $st = null;
@@ -683,7 +683,12 @@ function deleteContents($contentsNo){
 }
 
 function alreadyDelete($contentsNo){
-
+    $pdo = pdoSqlConnect();
+    $query = "SELECT EXISTS(SELECT * FROM Contents WHERE no = ? and isDelete = 'Y') AS exist;";
+    $st = $pdo->prepare($query);
+    $st->execute([$contentsNo]);
+    $res = $st->fetchAll();
+    return intval($res[0]["exist"]);
 }
 
 function addSeries($id, $contentsNo){

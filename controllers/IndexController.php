@@ -103,27 +103,52 @@ try {
                     $res->message = "존재하지 않는 컨텐츠 번호 입니다. 정확히 입력해주세요.";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
-                } else if (seriesList($contentsNo) == null) {
-                    http_response_code(200);
-                    $res->result = movieDetail($contentsNo);
-                    $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
-                    $res->result["likeStatus"] = userLikeInfo($id, $contentsNo);
-                    $res->isSuccess = TRUE;
-                    $res->code = 100;
-                    $res->message = "영화 정보 상세 조회 페이지";
-                    echo json_encode($res, JSON_NUMERIC_CHECK);
-                    break;
                 } else {
+                    if ((scrapAndLike($id, $contentsNo) == null)&&(onlyLike($id, $contentsNo) == null)&&(onlyScrap($id, $contentsNo) == null)) {
+                        http_response_code(200);
+                        $res->result = movieDetail($contentsNo);
+                        $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
+                        $res->result["likeStatus"] = userLikeInfo($id, $contentsNo);
+                        $res->result["seasonInfo"] = seriesList($contentsNo);
+                        $res->isSuccess = TRUE;
+                        $res->code = 100;
+                        $res->message = "영화 정보 상세 조회 페이지";
+                        echo json_encode($res, JSON_NUMERIC_CHECK);
+                        return;
+                    } else if ((scrapAndLike($id, $contentsNo) == null) && onlyScrap($id, $contentsNo) == null) {
+                        http_response_code(200);
+                        $res->result = onlyLike($id, $contentsNo);
+                        $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
+                        $res->result["seasonInfo"] = seriesList($contentsNo);
+                        $res->isSuccess = TRUE;
+                        $res->code = 100;
+                        $res->message = "영화 정보 상세 조회 페이지";
+                        echo json_encode($res, JSON_NUMERIC_CHECK);
+                        return;
+                    } else if ((scrapAndLike($id, $contentsNo) == null) && onlyLike($id, $contentsNo) == null) {
                     http_response_code(200);
-                    $res->result = movieDetail($contentsNo);
-                    $res->result["seasonInfo"] = seriesList($contentsNo);
-                    $res->result["scrapStatus"] = userScrapInfo($id, $contentsNo);
+                    $res->result = onlyScrap($id, $contentsNo);
                     $res->result["likeStatus"] = userLikeInfo($id, $contentsNo);
+                    $res->result["seasonInfo"] = seriesList($contentsNo);
                     $res->isSuccess = TRUE;
                     $res->code = 100;
                     $res->message = "영화 정보 상세 조회 페이지";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
-                    break;
+                    return;
+                }
+                    else {
+                        http_response_code(200);
+                        $res->result = scrapAndLike($id, $contentsNo);
+                        $res->result["seasonInfo"] = seriesList($contentsNo);
+                        $res->isSuccess = TRUE;
+                        $res->code = 100;
+                        $res->message = "영화 정보 상세 조회 페이지";
+//                    array_walk_recursive($res, function (&$item) {
+//                        $item = strval($item);
+//                    });
+                        echo json_encode($res, JSON_NUMERIC_CHECK);
+                        break;
+                    }
                 }
             }
 
@@ -152,6 +177,7 @@ try {
             $res->isSuccess = TRUE;
             $res->code = 100;
             $res->message = "인기 영화 조회";
+            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
         }
@@ -240,7 +266,16 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else {
+            }
+            else if (genrePopular($genreNo, $lastNo) == null) {
+                    http_response_code(200);
+                    $res->isSuccess = FALSE;
+                    $res->code = 400;
+                    $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+            }
+            else {
                 http_response_code(200);
                 $res->result = genrePopular($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -269,7 +304,16 @@ try {
                 $res->message = "존재하지 않는 장르번호 입니다. 정확히 입력해주세요.";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
-            } else {
+            }
+            else if (genreNewAdd($genreNo, $lastNo) == null) {
+                    http_response_code(200);
+                    $res->isSuccess = FALSE;
+                    $res->code = 400;
+                    $res->message = "아직 콘텐츠가 등록되지 않았습니다. 다른 장르를 선택해주세요.";
+                    echo json_encode($res, JSON_NUMERIC_CHECK);
+                    return;
+                }
+             else {
                 http_response_code(200);
                 $res->result = genreNewAdd($genreNo, $lastNo);
                 $res->isSuccess = TRUE;
@@ -320,6 +364,7 @@ try {
 //            $result = array_filter($res, function($value) {
 //                return !is_null($value);
 //            });
+            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -333,6 +378,7 @@ try {
 //            $result = array_filter($res, function($res) {
 //                return !is_null($res);
 //            });
+            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -346,6 +392,7 @@ try {
 //            $result = array_filter($res, function($value) {
 //                return !is_null($value);
 //            });
+            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -846,7 +893,7 @@ try {
                 return;
             }else {
                 http_response_code(200);
-                $res->result = addContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl);
+                addContents($type, $title, $director, $cast, $overview, $duration, $release, $rating, $posterUrl, $videoUrl);
                 $res->isSuccess = TRUE;
                 $res->code = 100;
                 $res->message = "콘텐츠 추가 성공";
@@ -932,8 +979,7 @@ try {
             }
 
 
-            case
-                "latestContents" :
+            case "latestContents" :
             $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
             if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
                 $res->isSuccess = FALSE;
@@ -990,11 +1036,10 @@ try {
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 return;
             } else {
-                if (deleteContents($contentsNo)) {
-                    $res->result = deleteContents($contentsNo);
+                if (alreadyDelete($contentsNo)) {
                     $res->isSuccess = FALSE;
                     $res->code = 201;
-                    $res->message = "스크랩 목록 삭제";
+                    $res->message = "이미 삭제된 콘텐츠 입니다.";
                     echo json_encode($res, JSON_NUMERIC_CHECK);
                     return;
                 } else {

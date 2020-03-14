@@ -258,3 +258,50 @@ where userId = ? and type = 2
     $pdo = null;
     return $res;
 }
+
+function scrapAndLike($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no,type, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl, likeFlag as likeStatus, scrapTB.isDeleted as sacrapStatus from Contents
+inner join (select userId, contentsNo, isDeleted from Scrap) scrapTB
+on Contents.no = scrapTB.contentsNo
+inner join (select userId, contentsNo, likeFlag, isDeleted from Likes) likeTB
+on Contents.no = likeTB.contentsNo
+where scrapTB.userId = ? and likeTB.userId = scrapTB.userId and no = ? and scrapTB.isDeleted = 'N' and likeTB.isDeleted = 'N';";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res[0];
+}
+
+function onlyScrap($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no,type, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl, scrapTB.isDeleted as scrapStatus from Contents
+inner join (select userId, contentsNo, isDeleted from Scrap) scrapTB
+on Contents.no = scrapTB.contentsNo
+where userId = ? and no = ? and isDeleted = 'N';";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res[0];
+}
+
+function onlyLike($id, $contentsNo){
+    $pdo = pdoSqlConnect();
+    $query = "select no,type, title, director, cast, overview, `release`, rating, duration, posterUrl, videoUrl, likeFlag as likeStatus from Contents
+inner join (select userId, contentsNo, likeFlag, isDeleted from Likes) likeTB
+on Contents.no = likeTB.contentsNo
+where userId = ? and no = ? and isDeleted = 'N';";
+    $st = $pdo->prepare($query);
+    $st->execute([$id, $contentsNo]);
+    $st->setFetchMode(PDO::FETCH_ASSOC);
+    $res = $st->fetchAll();
+    $st = null;
+    $pdo = null;
+    return $res[0];
+}

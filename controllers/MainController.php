@@ -125,7 +125,6 @@ try {
         }
 
         case "login":
-        {
             $id = $req->id;
             $pw = $req->pw;
             $conn = mysqli_connect('127.0.0.1', 'root', 'Hsh0913**', 'Netflix');
@@ -167,44 +166,25 @@ try {
                     }
                 }
                 }
-    }
 
+        case "validateJWT" :
+            $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
+            if (!isValidHeader($jwt, JWT_SECRET_KEY)) {
+                $res->isSuccess = FALSE;
+                $res->code = 201;
+                $res->message = "유효하지 않은 토큰입니다";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                addErrorLogs($errorLogs, $res, $req);
+                return;
+            }else{
+                $res->isSuccess = TRUE;
+                $res->code = 201;
+                $res->message = "유효한 토큰입니다";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                addErrorLogs($errorLogs, $res, $req);
+                break;
+            }
 
-//        case "login":
-//        {
-//            $id = $req->id;
-//            $pw = $req->pw;
-//            if (empty($id) || empty($pw)) {
-//                $res->isSucces = FALSE;
-//                $res->code = 00;
-//                $res->message = "공백이 입력됐습니다.";
-//                echo json_encode($res, JSON_NUMERIC_CHECK);
-//                return;
-//            } else {
-//                if (!validUser($id)) {
-//                    $res->isSuccess = FALSE;
-//                    $res->code = 100;
-//                    $res->message = "유효하지 않은 아이디 입니다.";
-//                    echo json_encode($res, JSON_NUMERIC_CHECK);
-//                    return;
-//                } else if(validUser($id)){
-//                    $res->isSuccess = FALSE;
-//                    $res->code = 100;
-//                    $res->message = "유효하지 않은 비밀번호 입니다.";
-//                    echo json_encode($res, JSON_NUMERIC_CHECK);
-//                    return;
-//                }
-//                else {
-//                    $jwt = getJWToken($id, $pw, JWT_SECRET_KEY);
-//                    $res->result["jwt"] = $jwt;
-//                    $res->isSuccess = TRUE;
-//                    $res->code = 100;
-//                    $res->message = "로그인 성공";
-//                    echo json_encode($res, JSON_NUMERIC_CHECK);
-//                    break;
-//                }
-//            }
-//        }
         case "user":
         {
             $jwt = $_SERVER["HTTP_X_ACCESS_TOKEN"];//사용자가 가지고 있는 토큰이 유효한지 확인하고
