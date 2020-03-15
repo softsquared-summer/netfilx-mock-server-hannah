@@ -364,7 +364,7 @@ try {
 //            $result = array_filter($res, function($value) {
 //                return !is_null($value);
 //            });
-            array_walk_recursive($res,function(&$item){$item=strval($item);});
+//            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -378,7 +378,7 @@ try {
 //            $result = array_filter($res, function($res) {
 //                return !is_null($res);
 //            });
-            array_walk_recursive($res,function(&$item){$item=strval($item);});
+//            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
@@ -392,7 +392,7 @@ try {
 //            $result = array_filter($res, function($value) {
 //                return !is_null($value);
 //            });
-            array_walk_recursive($res,function(&$item){$item=strval($item);});
+//            array_walk_recursive($res,function(&$item){$item=strval($item);});
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
 
