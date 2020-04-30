@@ -127,7 +127,7 @@ try {
         case "login":
             $id = $req->id;
             $pw = $req->pw;
-            $conn = mysqli_connect('127.0.0.1', 'root', 'Hsh0913**', 'Netflix');
+            $conn = mysqli_connect('127.0.0.1', 'root', '', 'Netflix');
             mysqli_set_charset($conn, "utf8");
             $sql = "select pw from User where id = '$id'";
             $resp = mysqli_query($conn, $sql);
